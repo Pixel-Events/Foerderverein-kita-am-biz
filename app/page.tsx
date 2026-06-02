@@ -61,47 +61,34 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-[#f8f5ee] text-[#2f2f2f]">
-      <header className="sticky top-0 z-50 border-b border-[#ece6dc] bg-[#f8f5ee]/90 backdrop-blur">
-  <div className="relative flex items-center px-10 py-4 lg:px-16">
-
-    {/* Logo links */}
+      <header className="sticky top-0 z-50 border-b border-[#ece6dc] bg-[#f8f5ee]/95 backdrop-blur">
+  <div className="relative flex items-center justify-between px-4 py-2 sm:px-6 lg:px-16">
     <div className="flex items-center">
       <Image
         src="/images/logo.png"
         alt="Förderverein Kita am BiZ"
         width={260}
         height={100}
-        className="h-24 w-auto object-contain"
+        className="h-16 w-auto object-contain sm:h-20 lg:h-24"
         priority
       />
     </div>
 
-    {/* Navigation mittig */}
     <nav className="absolute left-1/2 hidden -translate-x-1/2 gap-10 md:flex">
-       <a
-        href="#projekte"
-        className="font-medium text-[#3f6f55] transition hover:text-[#8daa91]"
-      >
+      <a href="#projekte" className="font-medium text-[#3f6f55] transition hover:text-[#8daa91]">
         Projekte
       </a>
 
-      <a
-        href="#beitritt"
-        className="font-medium text-[#3f6f55] transition hover:text-[#8daa91]"
-      >
+      <a href="#beitritt" className="font-medium text-[#3f6f55] transition hover:text-[#8daa91]">
         Mitglied werden
       </a>
 
-      <a
-        href="#kontakt"
-        className="font-medium text-[#3f6f55] transition hover:text-[#8daa91]"
-      >
+      <a href="#kontakt" className="font-medium text-[#3f6f55] transition hover:text-[#8daa91]">
         Kontakt
       </a>
     </nav>
 
-    {/* CTA rechts */}
-    <div className="ml-auto hidden md:block">
+    <div className="hidden lg:block">
       <a
         href="#beitritt"
         className="rounded-full bg-[#3f6f55] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#335945]"
@@ -110,16 +97,22 @@ export default function Home() {
       </a>
     </div>
 
+    <a
+      href="#beitritt"
+      className="rounded-full bg-[#3f6f55] px-4 py-2 text-xs font-semibold text-white md:hidden"
+    >
+      Mitglied werden
+    </a>
   </div>
 </header>
 
       {/* Hero */}
-<section className="relative min-h-screen overflow-hidden">
+<section className="relative min-h-[82vh] overflow-hidden md:min-h-screen">
   <div className="absolute inset-0">
     <img
       src="/images/hero-banner-2.jpg"
       alt="Förderverein Kita"
-      className="h-full w-full object-cover"
+      className="h-full w-full object-cover object-center md:object-cover"
     />
 
     <div className="absolute inset-0 bg-gradient-to-r from-[#f8f5ee]/95 via-[#f8f5ee]/20 to-transparent" />
@@ -133,7 +126,7 @@ export default function Home() {
 
       <h1
   style={{ fontFamily: "var(--font-baloo)" }}
-  className="mb-8 text-6xl font-bold leading-[0.95] text-[#3f6f55] md:text-8xl"
+  className="mb-6 text-5xl font-bold leading-[0.95] text-[#3f6f55] sm:text-6xl md:text-8xl"
 >
   Gemeinsam mehr
   <br />
@@ -146,7 +139,7 @@ export default function Home() {
         direkt zugutekommen.
       </p>
 
-      <div className="flex flex-col gap-4 sm:flex-row">
+      <div className="flex flex-col gap-4 sm:flex-row [&>a]:w-full sm:[&>a]:w-auto">
         <a
           href="#beitritt"
           className="rounded-full bg-[#8daa91] px-8 py-4 font-semibold text-white shadow-md transition hover:-translate-y-1 hover:bg-[#78987d]"
@@ -241,7 +234,7 @@ export default function Home() {
 </section>
 
       <section className="bg-white py-16">
-        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-6 text-center md:grid-cols-4">
+        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-4 px-4 text-center md:grid-cols-4 md:gap-8 md:px-6">
           {[
             ["85+", "Mitglieder"],
             ["12", "geförderte Projekte"],
@@ -300,7 +293,7 @@ export default function Home() {
       key={item.title}
       className="overflow-hidden rounded-[32px] bg-white shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-xl"
     >
-      <div className="h-100 overflow-hidden">
+      <div className="h-72 overflow-hidden sm:h-80">
         <Image
           src={item.image}
           alt={item.title}
@@ -331,7 +324,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="beitritt" className="mx-auto max-w-7xl px-6 py-24">
+      <section id="beitritt" className="mx-auto max-w-7xl px-4 py-16 md:px-6 md:py-24">
         <div className="mb-12 max-w-3xl">
           <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-[#8daa91]">
             Mitglied werden
@@ -350,7 +343,7 @@ export default function Home() {
 
         <form
           onSubmit={handleSubmit}
-          className="rounded-[36px] bg-white p-8 shadow-xl md:p-12"
+          className="rounded-[28px] bg-white p-5 shadow-xl sm:p-8 md:rounded-[36px] md:p-12"
         >
           <div className="space-y-12">
             <div>
@@ -625,7 +618,7 @@ export default function Home() {
 
           <button
             type="submit"
-            className="mt-10 rounded-full bg-[#8daa91] px-10 py-4 font-semibold text-white transition hover:bg-[#78987d]"
+            className="mt-10 w-full rounded-full bg-[#8daa91] px-10 py-4 font-semibold text-white transition hover:bg-[#78987d] sm:w-auto"
           >
             Beitritt absenden
           </button>
