@@ -367,13 +367,12 @@ export default function Home() {
                 />
 
                 <div>
-                  <label className="mb-2 block font-medium text-[#3f6f55]">
-                    Geburtsdatum
-                  </label>
                   <input
-                    name="birthDate"
-                    type="date"
+                    name="birthdate"
+                    type="text"
                     className="w-full rounded-2xl border border-[#ddd4c8] px-5 py-4"
+                    placeholder="Geburtsdatum"
+                    required
                   />
                 </div>
 
