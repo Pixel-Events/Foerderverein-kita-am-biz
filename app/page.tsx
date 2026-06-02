@@ -74,9 +74,7 @@ export default function Home() {
     />
 
     <nav className="absolute left-1/2 hidden -translate-x-1/2 gap-10 md:flex">
-      <a href="#ueber-uns" className="font-medium text-[#3f6f55]">Über uns</a>
       <a href="#projekte" className="font-medium text-[#3f6f55]">Projekte</a>
-      <a href="#beitritt" className="font-medium text-[#3f6f55]">Mitglied werden</a>
       <a href="#kontakt" className="font-medium text-[#3f6f55]">Kontakt</a>
     </nav>
 
