@@ -232,30 +232,7 @@ export default function Home() {
     </div>
   </div>
 </section>
-
-      <section className="bg-white py-16">
-        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-4 px-4 text-center md:grid-cols-4 md:gap-8 md:px-6">
-          {[
-            ["85+", "Mitglieder"],
-            ["12", "geförderte Projekte"],
-            ["4", "Aktionen im Jahr"],
-            ["100%", "für unsere Kinder"],
-          ].map(([number, text]) => (
-            <div
-              key={text}
-              className="rounded-3xl border border-[#ece6dc] bg-[#f8f5ee] p-8"
-            >
-              <p
-                style={{ fontFamily: "var(--font-baloo)" }}
-                className="text-5xl font-bold text-[#3f6f55]"
-              >{number}</p>
-              <p className="mt-2 text-[#555]">{text}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-    
+         
       <section id="projekte" className="bg-[#efe8dc] py-24">
         <div className="mx-auto max-w-7xl px-6">
           <div className="mb-14 text-center">
