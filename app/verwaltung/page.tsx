@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "../../lib/prisma";
 
+
 export default async function VerwaltungPage() {
   const applications = await prisma.membershipApplication.findMany({
     orderBy: {
@@ -35,7 +36,7 @@ export default async function VerwaltungPage() {
             </thead>
 
             <tbody>
-              {applications.map((application) => (
+              {applications.map((application: any) => (
                 <tr
                   key={application.id}
                   className="border-t border-[#ece6dc] transition hover:bg-[#f8f5ee]"
