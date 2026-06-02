@@ -421,27 +421,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div>
-              <h3 className="mb-6 text-2xl font-bold text-[#3f6f55]">
-                Kind & Kita
-              </h3>
-
-              <div className="grid gap-6 md:grid-cols-2">
-                <input
-                  name="childName"
-                  className="rounded-2xl border border-[#ddd4c8] px-5 py-4"
-                  placeholder="Name des Kindes"
-                />
-
-                <input
-                  name="childGroup"
-                  className="rounded-2xl border border-[#ddd4c8] px-5 py-4"
-                  placeholder="Gruppe des Kindes"
-                />
-              </div>
-            </div>
-
-            <div>
+             <div>
               <h3 className="mb-6 text-2xl font-bold text-[#3f6f55]">
                 Mitgliedschaft
               </h3>
@@ -509,11 +489,7 @@ export default function Home() {
                     title: "SEPA-Lastschrift",
                     text: "Der Beitrag wird bequem eingezogen.",
                   },
-                  {
-                    value: "transfer",
-                    title: "Überweisung",
-                    text: "Du überweist den Beitrag selbst.",
-                  },
+                  
                 ].map((option) => (
                   <button
                     key={option.value}
