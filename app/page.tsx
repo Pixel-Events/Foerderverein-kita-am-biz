@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { useState } from "react";
 
 export default function Home() {
   const [membershipFee, setMembershipFee] = useState("24");
