@@ -112,7 +112,7 @@ export default function Home() {
     <img
       src="/images/Hero-Banner-2.jpg"
       alt="Förderverein Kita"
-      className="h-full w-full object-cover object-center md:[object-position:75%_center]"
+      className="h-full w-full object-cover object-center md:object-cover"
     />
 
     <div className="absolute inset-0 bg-gradient-to-r from-[#f8f5ee]/95 via-[#f8f5ee]/20 to-transparent" />
