@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useState } from "react";
 
 export default function Home() {
   const [membershipFee, setMembershipFee] = useState("24");
   const [customFee, setCustomFee] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("sepa");
+  const [menuOpen, setMenuOpen] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -62,48 +64,58 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#f8f5ee] text-[#2f2f2f]">
       <header className="sticky top-0 z-50 border-b border-[#ece6dc] bg-[#f8f5ee]/95 backdrop-blur">
-  <div className="relative flex items-center justify-between px-4 py-2 sm:px-6 lg:px-16">
-    <div className="flex items-center">
-      <Image
-        src="/images/logo.png"
-        alt="Förderverein Kita am BiZ"
-        width={260}
-        height={100}
-        className="h-16 w-auto object-contain sm:h-20 lg:h-24"
-        priority
-      />
-    </div>
+  <div className="relative flex items-center justify-between px-4 py-3 sm:px-6 lg:px-16">
+    <Image
+      src="/images/logo.png"
+      alt="Förderverein Kita am BiZ"
+      width={260}
+      height={100}
+      className="h-16 w-auto object-contain sm:h-20 lg:h-24"
+      priority
+    />
 
     <nav className="absolute left-1/2 hidden -translate-x-1/2 gap-10 md:flex">
-      <a href="#projekte" className="font-medium text-[#3f6f55] transition hover:text-[#8daa91]">
-        Projekte
-      </a>
-
-      <a href="#beitritt" className="font-medium text-[#3f6f55] transition hover:text-[#8daa91]">
-        Mitglied werden
-      </a>
-
-      <a href="#kontakt" className="font-medium text-[#3f6f55] transition hover:text-[#8daa91]">
-        Kontakt
-      </a>
+      <a href="#ueber-uns" className="font-medium text-[#3f6f55]">Über uns</a>
+      <a href="#projekte" className="font-medium text-[#3f6f55]">Projekte</a>
+      <a href="#beitritt" className="font-medium text-[#3f6f55]">Mitglied werden</a>
+      <a href="#kontakt" className="font-medium text-[#3f6f55]">Kontakt</a>
     </nav>
 
-    <div className="hidden lg:block">
-      <a
-        href="#beitritt"
-        className="rounded-full bg-[#3f6f55] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#335945]"
-      >
-        Jetzt Mitglied werden
-      </a>
-    </div>
+    <button
+      type="button"
+      onClick={() => setMenuOpen(!menuOpen)}
+      className="flex h-11 w-11 items-center justify-center rounded-full border border-[#d8cfc3] bg-white text-[#3f6f55] md:hidden"
+      aria-label="Menü öffnen"
+    >
+      {menuOpen ? "✕" : "☰"}
+    </button>
 
     <a
       href="#beitritt"
-      className="rounded-full bg-[#3f6f55] px-4 py-2 text-xs font-semibold text-white md:hidden"
+      className="hidden rounded-full bg-[#3f6f55] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#335945] md:block"
     >
-      Mitglied werden
+      Jetzt Mitglied werden
     </a>
   </div>
+
+  {menuOpen && (
+    <div className="border-t border-[#ece6dc] bg-[#f8f5ee] px-4 py-5 md:hidden">
+      <nav className="flex flex-col gap-4">
+        <a onClick={() => setMenuOpen(false)} href="#ueber-uns" className="rounded-2xl bg-white px-5 py-4 font-medium text-[#3f6f55]">
+          Über uns
+        </a>
+        <a onClick={() => setMenuOpen(false)} href="#projekte" className="rounded-2xl bg-white px-5 py-4 font-medium text-[#3f6f55]">
+          Projekte
+        </a>
+        <a onClick={() => setMenuOpen(false)} href="#beitritt" className="rounded-2xl bg-white px-5 py-4 font-medium text-[#3f6f55]">
+          Mitglied werden
+        </a>
+        <a onClick={() => setMenuOpen(false)} href="#kontakt" className="rounded-2xl bg-white px-5 py-4 font-medium text-[#3f6f55]">
+          Kontakt
+        </a>
+      </nav>
+    </div>
+  )}
 </header>
 
       {/* Hero */}
