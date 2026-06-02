@@ -100,14 +100,8 @@ export default function Home() {
   {menuOpen && (
     <div className="border-t border-[#ece6dc] bg-[#f8f5ee] px-4 py-5 md:hidden">
       <nav className="flex flex-col gap-4">
-        <a onClick={() => setMenuOpen(false)} href="#ueber-uns" className="rounded-2xl bg-white px-5 py-4 font-medium text-[#3f6f55]">
-          Über uns
-        </a>
         <a onClick={() => setMenuOpen(false)} href="#projekte" className="rounded-2xl bg-white px-5 py-4 font-medium text-[#3f6f55]">
           Projekte
-        </a>
-        <a onClick={() => setMenuOpen(false)} href="#beitritt" className="rounded-2xl bg-white px-5 py-4 font-medium text-[#3f6f55]">
-          Mitglied werden
         </a>
         <a onClick={() => setMenuOpen(false)} href="#kontakt" className="rounded-2xl bg-white px-5 py-4 font-medium text-[#3f6f55]">
           Kontakt
