@@ -110,7 +110,7 @@ export default function Home() {
 <section className="relative min-h-[82vh] overflow-hidden md:min-h-screen">
   <div className="absolute inset-0">
     <img
-      src="/images/hero-banner-2.jpg"
+      src="/images/Hero-Banner-2.jpg"
       alt="Förderverein Kita"
       className="h-full w-full object-cover object-center md:object-cover"
     />
