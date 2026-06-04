@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { prisma } from "../../lib/prisma";
-
+import LogoutButton from "./LogoutButton";
 
 export default async function VerwaltungPage() {
   const applications = await prisma.membershipApplication.findMany({
@@ -12,9 +12,18 @@ export default async function VerwaltungPage() {
   return (
     <main className="min-h-screen bg-[#f8f5ee] px-6 py-12 text-[#2f2f2f]">
       <div className="mx-auto max-w-7xl">
-        <h1 className="mb-4 text-4xl font-bold text-[#3f6f55]">
-          Mitgliederverwaltung
-        </h1>
+        <div className="mb-4 flex items-center justify-between gap-4">
+          <h1 className="text-4xl font-bold text-[#3f6f55]">
+            Mitgliederverwaltung
+          </h1>
+<Link
+  href="/verwaltung/mitglieder"
+  className="rounded-full bg-[#3f6f55] px-5 py-2 text-sm font-semibold text-white"
+>
+  Mitglieder anzeigen
+</Link>
+          <LogoutButton />
+        </div>
 
         <p className="mb-10 text-[#555]">
           Hier erscheinen alle eingegangenen Beitrittsanträge. Klicke auf einen

@@ -31,3 +31,38 @@ model MembershipApplication {
 
   message        String?
 }
+
+model Admin {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("admin")
+}
+
+model Member {
+  id             String   @id @default(cuid())
+  createdAt      DateTime @default(now())
+
+  memberNumber   String   @unique
+  status         String   @default("Aktiv")
+
+  firstName      String
+  lastName       String
+  email          String
+  phone          String?
+
+  street         String
+  zip            String
+  city           String
+
+  membershipFee  Float
+  paymentMethod  String
+
+  iban           String?
+  accountHolder  String?
+
+  joinedAt       DateTime @default(now())
+}

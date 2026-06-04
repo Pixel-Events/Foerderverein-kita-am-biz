@@ -74,8 +74,17 @@ export default function Home() {
     />
 
     <nav className="absolute left-1/2 hidden -translate-x-1/2 gap-10 md:flex">
-      <a href="#projekte" className="font-medium text-[#3f6f55]">Projekte</a>
-      <a href="#kontakt" className="font-medium text-[#3f6f55]">Kontakt</a>
+      <a href="#projekte" className="font-medium text-[#3f6f55]">
+        Projekte
+      </a>
+
+      <a href="/spenden" className="font-medium text-[#3f6f55]">
+        Spenden
+      </a>
+
+      <a href="#kontakt" className="font-medium text-[#3f6f55]">
+        Kontakt
+      </a>
     </nav>
 
     <button
@@ -91,18 +100,43 @@ export default function Home() {
       href="#beitritt"
       className="hidden rounded-full bg-[#3f6f55] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#335945] md:block"
     >
-      Jetzt Mitglied werden
+      Mitglied werden
     </a>
   </div>
 
   {menuOpen && (
     <div className="border-t border-[#ece6dc] bg-[#f8f5ee] px-4 py-5 md:hidden">
       <nav className="flex flex-col gap-4">
-        <a onClick={() => setMenuOpen(false)} href="#projekte" className="rounded-2xl bg-white px-5 py-4 font-medium text-[#3f6f55]">
+        <a
+          onClick={() => setMenuOpen(false)}
+          href="#projekte"
+          className="rounded-2xl bg-white px-5 py-4 font-medium text-[#3f6f55]"
+        >
           Projekte
         </a>
-        <a onClick={() => setMenuOpen(false)} href="#kontakt" className="rounded-2xl bg-white px-5 py-4 font-medium text-[#3f6f55]">
+
+        <a
+          onClick={() => setMenuOpen(false)}
+          href="/spenden"
+          className="rounded-2xl bg-white px-5 py-4 font-medium text-[#3f6f55]"
+        >
+          Spenden
+        </a>
+
+        <a
+          onClick={() => setMenuOpen(false)}
+          href="#kontakt"
+          className="rounded-2xl bg-white px-5 py-4 font-medium text-[#3f6f55]"
+        >
           Kontakt
+        </a>
+
+        <a
+          onClick={() => setMenuOpen(false)}
+          href="#beitritt"
+          className="rounded-2xl bg-[#3f6f55] px-5 py-4 font-semibold text-white"
+        >
+          Mitglied werden
         </a>
       </nav>
     </div>

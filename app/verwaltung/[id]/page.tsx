@@ -2,6 +2,8 @@ import { prisma } from "../../../lib/prisma";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import StatusButtons from "./StatusButtons";
+import ApproveMemberButton from "./ApproveMemberButton";
+import EditApplicationForm from "./EditApplicationForm";
 
 type Props = {
   params: Promise<{
@@ -68,8 +70,16 @@ export default async function AntragDetailPage({ params }: Props) {
           </div>
 
           <div className="mt-8">
-            <StatusButtons id={application.id} />
-          </div>
+  <EditApplicationForm application={application} />
+</div>
+
+          <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+  <StatusButtons id={application.id} />
+
+  {application.status !== "Mitglied" && (
+    <ApproveMemberButton id={application.id} />
+  )}
+</div>
         </div>
       </div>
     </main>
