@@ -7,9 +7,12 @@ export default function ResetAdminPasswordPage() {
 
   async function handleReset(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    const form = e.currentTarget;
+
     setMessage("");
 
-    const formData = new FormData(e.currentTarget);
+    const formData = new FormData(form);
 
     const data = {
       email: formData.get("email"),
@@ -33,7 +36,8 @@ export default function ResetAdminPasswordPage() {
     }
 
     setMessage("Passwort wurde erfolgreich geändert.");
-    e.currentTarget.reset();
+
+    form.reset();
   }
 
   return (
