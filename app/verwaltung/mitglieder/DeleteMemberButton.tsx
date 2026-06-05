@@ -8,7 +8,7 @@ export default function DeleteMemberButton({ id }: { id: string }) {
 
     if (!confirmed) return;
 
-    const response = await fetch(`/api/membership/${id}/delete`, {
+    const response = await fetch(`/api/member/${id}/delete`, {
       method: "DELETE",
     });
 

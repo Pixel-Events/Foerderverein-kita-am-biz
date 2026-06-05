@@ -11,30 +11,32 @@ export async function DELETE(request: Request, { params }: RouteContext) {
   try {
     const { id } = await params;
 
-    const application = await prisma.membershipApplication.findUnique({
+    const member = await prisma.member.findUnique({
       where: { id },
     });
 
-    if (!application) {
+    if (!member) {
       return NextResponse.json(
-        { message: "Antrag wurde nicht gefunden." },
+        { message: "Mitglied wurde nicht gefunden." },
         { status: 404 }
       );
     }
 
-    await prisma.membershipApplication.delete({
+    await prisma.member.delete({
       where: { id },
     });
 
     return NextResponse.json({
       success: true,
-      message: "Antrag wurde gelöscht.",
+      message: "Mitglied wurde gelöscht.",
     });
   } catch (error: any) {
-    console.error("DELETE APPLICATION ERROR:", error);
+    console.error(error);
 
     return NextResponse.json(
-      { message: error?.message || "Antrag konnte nicht gelöscht werden." },
+      {
+        message: error?.message || "Mitglied konnte nicht gelöscht werden.",
+      },
       { status: 500 }
     );
   }

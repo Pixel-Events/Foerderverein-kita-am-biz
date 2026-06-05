@@ -1,33 +1,83 @@
 import Link from "next/link";
 import { prisma } from "../../lib/prisma";
 import LogoutButton from "./LogoutButton";
+import DeleteApplicationButton from "./DeleteApplicationButton";
 
 export default async function VerwaltungPage() {
   const applications = await prisma.membershipApplication.findMany({
-    orderBy: {
-      createdAt: "desc",
+  where: {
+    status: {
+      not: "Mitglied",
     },
-  });
+  },
+  orderBy: {
+    createdAt: "desc",
+  },
+});
+
+  const members = await prisma.member.findMany();
 
   return (
     <main className="min-h-screen bg-[#f8f5ee] px-6 py-12 text-[#2f2f2f]">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-4 flex items-center justify-between gap-4">
-          <h1 className="text-4xl font-bold text-[#3f6f55]">
-            Mitgliederverwaltung
-          </h1>
-<Link
-  href="/verwaltung/mitglieder"
-  className="rounded-full bg-[#3f6f55] px-5 py-2 text-sm font-semibold text-white"
->
-  Mitglieder anzeigen
-</Link>
-          <LogoutButton />
+        <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h1 className="text-4xl font-bold text-[#3f6f55]">
+              Mitgliederverwaltung
+            </h1>
+
+            <p className="mt-2 text-[#666]">
+              Verwaltung von Anträgen, Mitgliedern und Vereinsdaten.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-3">
+            <Link
+              href="/verwaltung/mitglieder"
+              className="rounded-full bg-[#3f6f55] px-5 py-3 font-semibold text-white transition hover:bg-[#335945]"
+            >
+              Mitglieder
+            </Link>
+
+            <Link
+              href="/verwaltung/mitglieder/neu"
+              className="rounded-full bg-[#8daa91] px-5 py-3 font-semibold text-white transition hover:bg-[#78987d]"
+            >
+              + Neues Mitglied
+            </Link>
+
+            <LogoutButton />
+          </div>
         </div>
 
-        <p className="mb-10 text-[#555]">
-          Hier erscheinen alle eingegangenen Beitrittsanträge. Klicke auf einen
-          Antrag, um alle Angaben zu sehen.
+        <div className="mb-10 grid gap-4 md:grid-cols-3">
+          <div className="rounded-3xl bg-white p-6 shadow-sm">
+            <p className="text-sm text-[#666]">Offene Anträge</p>
+            <p className="mt-2 text-3xl font-bold text-[#3f6f55]">
+              {applications.length}
+            </p>
+          </div>
+
+          <div className="rounded-3xl bg-white p-6 shadow-sm">
+            <p className="text-sm text-[#666]">Mitglieder gesamt</p>
+            <p className="mt-2 text-3xl font-bold text-[#3f6f55]">
+              {members.length}
+            </p>
+          </div>
+
+          <div className="rounded-3xl bg-white p-6 shadow-sm">
+            <p className="text-sm text-[#666]">Jahresbeiträge</p>
+            <p className="mt-2 text-3xl font-bold text-[#3f6f55]">
+              {members
+                .reduce((sum, member) => sum + member.membershipFee, 0)
+                .toFixed(0)}{" "}
+              €
+            </p>
+          </div>
+        </div>
+
+        <p className="mb-6 text-[#555]">
+          Hier erscheinen alle eingegangenen Beitrittsanträge.
         </p>
 
         <div className="overflow-hidden rounded-3xl bg-white shadow-xl">
@@ -41,6 +91,7 @@ export default async function VerwaltungPage() {
                 <th className="p-4">Status</th>
                 <th className="p-4">Datum</th>
                 <th className="p-4">Details</th>
+                <th className="p-4">Aktion</th>
               </tr>
             </thead>
 
@@ -55,12 +106,11 @@ export default async function VerwaltungPage() {
                       href={`/verwaltung/${application.id}`}
                       className="text-[#3f6f55] hover:underline"
                     >
-                      {application.firstName || "-"}{" "}
-                      {application.lastName || ""}
+                      {application.firstName} {application.lastName}
                     </Link>
                   </td>
 
-                  <td className="p-4">{application.email || "-"}</td>
+                  <td className="p-4">{application.email}</td>
 
                   <td className="p-4">
                     {application.membershipFee.toFixed(2)} €
@@ -85,13 +135,19 @@ export default async function VerwaltungPage() {
                   </td>
 
                   <td className="p-4">
-                    <Link
-                      href={`/verwaltung/${application.id}`}
-                      className="rounded-full bg-[#8daa91] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#78987d]"
-                    >
-                      Öffnen
-                    </Link>
-                  </td>
+  <Link
+    href={`/verwaltung/${application.id}`}
+    className="rounded-full bg-[#8daa91] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#78987d]"
+  >
+    Öffnen
+  </Link>
+</td>
+
+<td className="p-4">
+  <DeleteApplicationButton
+    id={application.id}
+  />
+</td>
                 </tr>
               ))}
             </tbody>
@@ -99,9 +155,11 @@ export default async function VerwaltungPage() {
         </div>
 
         {applications.length === 0 && (
-          <p className="mt-8 text-[#555]">
-            Es liegen noch keine Beitrittsanträge vor.
-          </p>
+          <div className="mt-8 rounded-3xl bg-white p-8 text-center shadow-sm">
+            <p className="text-[#666]">
+              Es liegen aktuell keine Beitrittsanträge vor.
+            </p>
+          </div>
         )}
       </div>
     </main>
