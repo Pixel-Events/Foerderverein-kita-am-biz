@@ -3,6 +3,7 @@ import { prisma } from "../../lib/prisma";
 import LogoutButton from "./LogoutButton";
 import DeleteApplicationButton from "./DeleteApplicationButton";
 
+export const dynamic = "force-dynamic";
 export default async function VerwaltungPage() {
   const applications = await prisma.membershipApplication.findMany({
   where: {
