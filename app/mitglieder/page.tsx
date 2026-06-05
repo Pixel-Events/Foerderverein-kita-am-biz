@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { prisma } from "../../lib/prisma";
 import ProfileForm from "./ProfileForm";
+import ChangePasswordForm from "./ChangePasswordForm";
 
 export default async function MitgliederBereichPage() {
   const cookieStore = await cookies();
@@ -77,6 +78,7 @@ export default async function MitgliederBereichPage() {
           </div>
 
           <ProfileForm member={member} />
+          <ChangePasswordForm />
         </section>
       </div>
     </main>
