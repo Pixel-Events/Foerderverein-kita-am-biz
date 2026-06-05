@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "../../../lib/prisma";
 import LogoutButton from "../LogoutButton";
 
+export const dynamic = "force-dynamic";
 export default async function BeitraegePage() {
   const members = await prisma.member.findMany({
     where: {
