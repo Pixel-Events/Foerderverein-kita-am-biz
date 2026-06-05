@@ -63,6 +63,7 @@ model Member {
 
   iban           String?
   accountHolder  String?
+  mandateReference String?
 
   joinedAt       DateTime @default(now())
 

@@ -126,6 +126,11 @@ export default async function MitgliedDetailPage({
               label="IBAN"
               value={member.iban}
             />
+
+            <Detail
+              label="Mandatsreferenz"
+              value={member.mandateReference}
+            />
           </div>
 
         <div className="mt-8">

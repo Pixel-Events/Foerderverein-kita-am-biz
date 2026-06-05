@@ -39,6 +39,7 @@ export async function PATCH(
         paymentMethod: data.paymentMethod || "sepa",
         accountHolder: data.accountHolder || null,
         iban: data.iban || null,
+        mandateReference: data.mandateReference || null,
         status: data.status || "Aktiv",
       },
     });

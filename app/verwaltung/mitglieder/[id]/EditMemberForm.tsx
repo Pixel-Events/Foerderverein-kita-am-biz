@@ -124,6 +124,14 @@ export default function EditMemberForm({ member }: { member: any }) {
       <input name="iban" defaultValue={member.iban || ""} className="input-field" />
     </Field>
 
+    <Field label="Mandatsreferenz">
+  <input
+    name="mandateReference"
+    defaultValue={member.mandateReference || ""}
+    className="input-field"
+  />
+</Field>
+
     <Field label="Status">
       <select name="status" defaultValue={member.status} className="input-field">
         <option value="Aktiv">Aktiv</option>
