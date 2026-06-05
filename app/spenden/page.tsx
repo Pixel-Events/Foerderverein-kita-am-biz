@@ -42,10 +42,10 @@ export default function SpendenPage() {
                 <strong>Empfänger:</strong> Förderverein Kita am BiZ e. V.
               </p>
               <p>
-                <strong>IBAN:</strong> DE00 0000 0000 0000 0000 00
+                <strong>IBAN:</strong> DE71 5509 1200 0041 0576 02
               </p>
               <p>
-                <strong>BIC:</strong> XXXXXXXX
+                <strong>BIC:</strong> GENODE61AZY
               </p>
               <p>
                 <strong>Verwendungszweck:</strong> Spende Förderverein Kita am BiZ
