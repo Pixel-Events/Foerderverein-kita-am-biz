@@ -50,7 +50,7 @@ export default function PasswortVergessenPage() {
             placeholder="E-Mail-Adresse"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="mb-4 w-full rounded-2xl border border-[#ddd4c8] px-5 py-4"
+            className="mb-4 w-full rounded-2xl border border-[#ddd4c8] px-5 py-4 text-black"
             required
           />
 
