@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
 model MembershipApplication {
@@ -51,7 +51,7 @@ model Member {
 
   firstName      String
   lastName       String
-  email          String
+  email          String @unique
   phone          String?
 
   street         String
