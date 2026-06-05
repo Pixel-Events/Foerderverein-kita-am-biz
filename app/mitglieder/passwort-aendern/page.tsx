@@ -8,45 +8,36 @@ export default function PasswortAendernPage() {
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [message, setMessage] = useState("");
 
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-
-  async function handleSubmit(
-    e: React.FormEvent<HTMLFormElement>
-  ) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setMessage("");
 
-    setError("");
-    setSuccess("");
-
-    const response = await fetch(
-      "/api/member/change-password",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          newPassword,
-          confirmPassword,
-        }),
-      }
-    );
+    const response = await fetch("/api/member/change-password", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        newPassword,
+        confirmPassword,
+      }),
+    });
 
     const result = await response.json();
 
     if (!response.ok) {
-      setError(result.message);
+      setMessage(result.message || "Passwort konnte nicht geändert werden.");
       return;
     }
 
-    setSuccess("Passwort erfolgreich geändert.");
+    setMessage("Passwort wurde erfolgreich geändert.");
 
     setTimeout(() => {
-      router.push("/mitglieder");
+      router.replace("/mitglieder");
       router.refresh();
-    }, 1500);
+    }, 1000);
   }
 
   return (
@@ -66,10 +57,6 @@ export default function PasswortAendernPage() {
           Passwort festlegen
         </h1>
 
-        <p className="mb-6 text-sm text-[#666]">
-          Bitte vergeben Sie ein eigenes Passwort für Ihren Mitgliederzugang.
-        </p>
-
         <input
           type="password"
           placeholder="Neues Passwort"
@@ -88,16 +75,10 @@ export default function PasswortAendernPage() {
           required
         />
 
-        {error && (
-          <div className="mb-4 rounded-2xl bg-red-50 p-4 text-sm text-red-700">
-            {error}
-          </div>
-        )}
-
-        {success && (
-          <div className="mb-4 rounded-2xl bg-green-50 p-4 text-sm text-green-700">
-            {success}
-          </div>
+        {message && (
+          <p className="mb-4 rounded-2xl bg-[#eaf2ea] p-4 text-sm text-[#3f6f55]">
+            {message}
+          </p>
         )}
 
         <button
