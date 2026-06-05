@@ -40,6 +40,28 @@ export default async function MitgliederPage() {
           Hier erscheinen alle übernommenen Mitglieder des Fördervereins.
         </p>
 
+        <div className="mb-8 grid gap-4 md:grid-cols-4">
+          <StatCard label="Mitglieder gesamt" value={members.length} />
+
+          <StatCard
+            label="Aktiv"
+            value={members.filter((m) => m.status === "Aktiv").length}
+          />
+
+          <StatCard
+            label="Ruhend"
+            value={members.filter((m) => m.status === "Ruhend").length}
+          />
+
+          <StatCard
+            label="Jahresbeiträge"
+            value={`${members
+              .filter((m) => m.status === "Aktiv")
+              .reduce((sum, member) => sum + member.membershipFee, 0)
+              .toFixed(0)} €`}
+          />
+        </div>
+
         <MembersTable members={members} />
 
         {members.length === 0 && (
@@ -47,5 +69,22 @@ export default async function MitgliederPage() {
         )}
       </div>
     </main>
+  );
+}
+
+function StatCard({
+  label,
+  value,
+}: {
+  label: string;
+  value: string | number;
+}) {
+  return (
+    <div className="rounded-3xl bg-white p-6 shadow-sm">
+      <p className="text-sm text-[#666]">{label}</p>
+      <p className="mt-2 text-3xl font-bold text-[#3f6f55]">
+        {value}
+      </p>
+    </div>
   );
 }

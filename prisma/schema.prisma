@@ -65,4 +65,26 @@ model Member {
   accountHolder  String?
 
   joinedAt       DateTime @default(now())
+
+  password       String?
+  lastLogin      DateTime?
+  mustChangePassword Boolean  @default(true)
+}
+
+model Donation {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+
+  donorName     String
+  donorEmail    String?
+
+  amount        Float
+
+  purpose       String?
+
+  paymentMethod String
+
+  donationDate  DateTime @default(now())
+
+  receiptStatus String @default("Offen")
 }

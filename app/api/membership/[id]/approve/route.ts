@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "../../../../../lib/prisma";
+import bcrypt from "bcryptjs";
 
 type RouteContext = {
   params: Promise<{
@@ -36,31 +37,37 @@ export async function POST(request: Request, { params }: RouteContext) {
     }
 
     const count = await prisma.member.count();
+    const initialPassword = Math.random().toString(36).slice(-10);
+    const hashedPassword = await bcrypt.hash(initialPassword, 10);
+
     const memberNumber = `FV-${new Date().getFullYear()}-${String(
       count + 1
     ).padStart(3, "0")}`;
 
     const member = await prisma.member.create({
-      data: {
-        memberNumber,
-        status: "Aktiv",
+  data: {
+    memberNumber,
+    status: "Aktiv",
 
-        firstName: application.firstName,
-        lastName: application.lastName,
-        email: application.email,
-        phone: application.phone,
+    firstName: application.firstName,
+    lastName: application.lastName,
+    email: application.email,
+    phone: application.phone,
 
-        street: application.street,
-        zip: application.zip,
-        city: application.city,
+    street: application.street,
+    zip: application.zip,
+    city: application.city,
 
-        membershipFee: application.membershipFee,
-        paymentMethod: application.paymentMethod,
+    membershipFee: application.membershipFee,
+    paymentMethod: application.paymentMethod,
 
-        iban: application.iban,
-        accountHolder: application.accountHolder,
-      },
-    });
+    iban: application.iban,
+    accountHolder: application.accountHolder,
+
+    password: hashedPassword,
+    mustChangePassword: true,
+  },
+});
 
     await prisma.membershipApplication.update({
       where: { id },
@@ -72,6 +79,7 @@ export async function POST(request: Request, { params }: RouteContext) {
     return NextResponse.json({
       success: true,
       member,
+      initialPassword,
     });
   } 
   

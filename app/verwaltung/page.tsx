@@ -33,6 +33,13 @@ export default async function VerwaltungPage() {
 
           <div className="flex flex-wrap gap-3">
             <Link
+              href="/verwaltung/mitglieder/neu"
+              className="rounded-full bg-[#8daa91] px-5 py-3 font-semibold text-white transition hover:bg-[#78987d]"
+            >
+              + Neues Mitglied
+            </Link>
+            
+            <Link
               href="/verwaltung/mitglieder"
               className="rounded-full bg-[#3f6f55] px-5 py-3 font-semibold text-white transition hover:bg-[#335945]"
             >
@@ -40,41 +47,53 @@ export default async function VerwaltungPage() {
             </Link>
 
             <Link
-              href="/verwaltung/mitglieder/neu"
-              className="rounded-full bg-[#8daa91] px-5 py-3 font-semibold text-white transition hover:bg-[#78987d]"
+              href="/verwaltung/beitraege"
+              className="rounded-full border border-[#d8cfc3] bg-white px-5 py-3 font-semibold text-[#3f6f55] transition hover:bg-[#f8f5ee]"
             >
-              + Neues Mitglied
+              Beiträge
+            </Link>
+
+            <Link
+              href="/verwaltung/spenden"
+              className="rounded-full border border-[#d8cfc3] bg-white px-5 py-3 font-semibold text-[#3f6f55] transition hover:bg-[#f8f5ee]"
+            >
+              Spenden
             </Link>
 
             <LogoutButton />
           </div>
         </div>
 
-        <div className="mb-10 grid gap-4 md:grid-cols-3">
-          <div className="rounded-3xl bg-white p-6 shadow-sm">
-            <p className="text-sm text-[#666]">Offene Anträge</p>
-            <p className="mt-2 text-3xl font-bold text-[#3f6f55]">
-              {applications.length}
-            </p>
-          </div>
+        <div className="mb-10 grid gap-4 md:grid-cols-5">
+  <DashboardCard
+    label="Offene Anträge"
+    value={applications.length}
+  />
 
-          <div className="rounded-3xl bg-white p-6 shadow-sm">
-            <p className="text-sm text-[#666]">Mitglieder gesamt</p>
-            <p className="mt-2 text-3xl font-bold text-[#3f6f55]">
-              {members.length}
-            </p>
-          </div>
+  <DashboardCard
+    label="Mitglieder gesamt"
+    value={members.length}
+  />
 
-          <div className="rounded-3xl bg-white p-6 shadow-sm">
-            <p className="text-sm text-[#666]">Jahresbeiträge</p>
-            <p className="mt-2 text-3xl font-bold text-[#3f6f55]">
-              {members
-                .reduce((sum, member) => sum + member.membershipFee, 0)
-                .toFixed(0)}{" "}
-              €
-            </p>
-          </div>
-        </div>
+  <DashboardCard
+    label="Aktive Mitglieder"
+    value={members.filter((m) => m.status === "Aktiv").length}
+  />
+
+  <DashboardCard
+    label="Ruhend"
+    value={members.filter((m) => m.status === "Ruhend").length}
+  />
+
+  <DashboardCard
+    label="Jahresbeiträge"
+    value={`${members
+      .filter((m) => m.status === "Aktiv")
+      .reduce((sum, member) => sum + member.membershipFee, 0)
+      .toFixed(0)} €`}
+  />
+</div>
+        
 
         <p className="mb-6 text-[#555]">
           Hier erscheinen alle eingegangenen Beitrittsanträge.
@@ -163,5 +182,22 @@ export default async function VerwaltungPage() {
         )}
       </div>
     </main>
+  );
+}
+
+function DashboardCard({
+  label,
+  value,
+}: {
+  label: string;
+  value: string | number;
+}) {
+  return (
+    <div className="rounded-3xl bg-white p-6 shadow-sm">
+      <p className="text-sm text-[#666]">{label}</p>
+      <p className="mt-2 text-3xl font-bold text-[#3f6f55]">
+        {value}
+      </p>
+    </div>
   );
 }
