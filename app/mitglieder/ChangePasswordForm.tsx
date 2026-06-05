@@ -4,12 +4,16 @@ import { useState } from "react";
 
 export default function ChangePasswordForm() {
   const [message, setMessage] = useState("");
+  const [isError, setIsError] = useState(false);
 
   async function handleChangePassword(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const form = e.currentTarget;
     const formData = new FormData(form);
+
+    setMessage("");
+    setIsError(false);
 
     const response = await fetch("/api/member/change-password", {
       method: "PATCH",
@@ -25,18 +29,23 @@ export default function ChangePasswordForm() {
     const result = await response.json();
 
     if (!response.ok) {
+      setIsError(true);
       setMessage(result.message || "Passwort konnte nicht geändert werden.");
       return;
     }
 
     setMessage("Passwort wurde erfolgreich geändert.");
 
-        setTimeout(() => {
-        window.location.href = "/mitglieder";
-        }, 1000);
+    setTimeout(() => {
+      window.location.href = "/mitglieder";
+    }, 1000);
+  }
 
   return (
-    <form onSubmit={handleChangePassword} className="mt-8 rounded-3xl bg-[#f8f5ee] p-6">
+    <form
+      onSubmit={handleChangePassword}
+      className="mt-8 rounded-3xl bg-[#f8f5ee] p-6"
+    >
       <h2 className="mb-6 text-3xl font-bold text-[#3f6f55]">
         Passwort ändern
       </h2>
@@ -60,14 +69,18 @@ export default function ChangePasswordForm() {
       </div>
 
       {message && (
-        <p className="mt-5 rounded-2xl bg-white p-4 text-sm text-[#3f6f55]">
+        <p
+          className={`mt-5 rounded-2xl bg-white p-4 text-sm ${
+            isError ? "text-red-700" : "text-[#3f6f55]"
+          }`}
+        >
           {message}
         </p>
       )}
 
       <button
         type="submit"
-        className="mt-6 rounded-full bg-[#3f6f55] px-8 py-4 font-semibold text-white"
+        className="mt-6 rounded-full bg-[#3f6f55] px-8 py-4 font-semibold text-white transition hover:bg-[#335945]"
       >
         Passwort speichern
       </button>
