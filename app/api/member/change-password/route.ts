@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
 import { prisma } from "../../../../lib/prisma";
 
-export async function POST(request: Request) {
+export async function PATCH(request: Request) {
   try {
     const cookieStore = await cookies();
     const memberId = cookieStore.get("member_auth")?.value;
@@ -15,25 +15,27 @@ export async function POST(request: Request) {
       );
     }
 
-    const { newPassword, confirmPassword } = await request.json();
+    const { currentPassword, newPassword } = await request.json();
 
-    if (!newPassword || !confirmPassword) {
+    const member = await prisma.member.findUnique({
+      where: { id: memberId },
+    });
+
+    if (!member || !member.password) {
       return NextResponse.json(
-        { message: "Bitte beide Passwortfelder ausfüllen." },
-        { status: 400 }
+        { message: "Mitglied nicht gefunden." },
+        { status: 404 }
       );
     }
 
-    if (newPassword !== confirmPassword) {
-      return NextResponse.json(
-        { message: "Die Passwörter stimmen nicht überein." },
-        { status: 400 }
-      );
-    }
+    const validPassword = await bcrypt.compare(
+      currentPassword,
+      member.password
+    );
 
-    if (newPassword.length < 8) {
+    if (!validPassword) {
       return NextResponse.json(
-        { message: "Das Passwort muss mindestens 8 Zeichen lang sein." },
+        { message: "Aktuelles Passwort ist falsch." },
         { status: 400 }
       );
     }
@@ -54,7 +56,10 @@ export async function POST(request: Request) {
     });
   } catch (error: any) {
     return NextResponse.json(
-      { message: error?.message || "Passwort konnte nicht geändert werden." },
+      {
+        message:
+          error?.message || "Passwort konnte nicht geändert werden.",
+      },
       { status: 500 }
     );
   }

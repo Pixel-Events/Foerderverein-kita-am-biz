@@ -9,57 +9,95 @@ export default function Home() {
   const [customFee, setCustomFee] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("sepa");
   const [menuOpen, setMenuOpen] = useState(false);
-
+  const [memberLoginOpen, setMemberLoginOpen] = useState(false);
+  const [memberEmail, setMemberEmail] = useState("");
+  const [memberPassword, setMemberPassword] = useState("");
+  const [memberLoginError, setMemberLoginError] = useState("");
+  
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (membershipFee === "custom" && Number(customFee) < 24) {
-      alert("Der eigene Jahresbeitrag muss mindestens 24 € betragen.");
-      return;
-    }
+  const form = e.currentTarget;
 
-    const formData = new FormData(e.currentTarget);
-
-    const data = {
-      firstName: formData.get("firstName"),
-      lastName: formData.get("lastName"),
-      birthDate: formData.get("birthDate"),
-      email: formData.get("email"),
-      phone: formData.get("phone"),
-      street: formData.get("street"),
-      zip: formData.get("zip"),
-      city: formData.get("city"),
-      childName: formData.get("childName"),
-      childGroup: formData.get("childGroup"),
-      membershipFee,
-      customFee,
-      paymentMethod,
-      accountHolder: formData.get("accountHolder"),
-      iban: formData.get("iban"),
-      message: formData.get("message"),
-    };
-
-    const response = await fetch("/api/membership", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    const result = await response.json();
-
-    if (!response.ok) {
-      alert(result.message);
-      return;
-    }
-
-    alert("Mitgliedsantrag erfolgreich übermittelt.");
-    e.currentTarget.reset();
-    setMembershipFee("24");
-    setCustomFee("");
-    setPaymentMethod("sepa");
+  if (membershipFee === "custom" && Number(customFee) < 24) {
+    alert("Der eigene Jahresbeitrag muss mindestens 24 € betragen.");
+    return;
   }
+
+  const formData = new FormData(form);
+
+  const data = {
+    firstName: formData.get("firstName"),
+    lastName: formData.get("lastName"),
+    birthDate: formData.get("birthDate"),
+    email: formData.get("email"),
+    phone: formData.get("phone"),
+    street: formData.get("street"),
+    zip: formData.get("zip"),
+    city: formData.get("city"),
+    childName: formData.get("childName"),
+    childGroup: formData.get("childGroup"),
+    membershipFee,
+    customFee,
+    paymentMethod,
+    accountHolder: formData.get("accountHolder"),
+    iban: formData.get("iban"),
+    message: formData.get("message"),
+  };
+
+  const response = await fetch("/api/membership", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    alert(result.message || "Mitgliedsantrag konnte nicht übermittelt werden.");
+    return;
+  }
+
+  alert("Mitgliedsantrag erfolgreich übermittelt.");
+
+  form.reset();
+  setMembershipFee("24");
+  setCustomFee("");
+  setPaymentMethod("sepa");
+}
+
+async function handleMemberLogin(e: React.FormEvent<HTMLFormElement>) {
+  e.preventDefault();
+
+  setMemberLoginError("");
+
+  const response = await fetch("/api/member/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email: memberEmail,
+      password: memberPassword,
+    }),
+  });
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    setMemberLoginError(result.message || "Login fehlgeschlagen.");
+    return;
+  }
+
+  if (result.mustChangePassword) {
+    window.location.href = "/mitglieder/passwort-aendern";
+    return;
+  }
+
+  window.location.href = "/mitglieder";
+}
 
   return (
     <main className="min-h-screen bg-[#f8f5ee] text-[#2f2f2f]">
@@ -97,12 +135,79 @@ export default function Home() {
       {menuOpen ? "✕" : "☰"}
     </button>
 
-    <a
-      href="#beitritt"
-      className="hidden rounded-full bg-[#3f6f55] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#335945] md:block"
+    <div className="hidden items-center gap-3 md:flex">
+  <div className="relative">
+    <button
+      type="button"
+      onClick={() => setMemberLoginOpen(!memberLoginOpen)}
+      className="rounded-full border border-[#d8cfc3] bg-white px-6 py-3 text-sm font-semibold text-[#3f6f55] transition hover:border-[#3f6f55]"
     >
-      Mitglied werden
-    </a>
+      Mitgliederbereich
+    </button>
+
+    {memberLoginOpen && (
+      <div className="absolute right-0 top-16 z-50 w-80 rounded-[28px] bg-white p-6 shadow-2xl">
+        <h3 className="mb-4 text-lg font-semibold text-[#3f6f55]">
+          Mitglieder Login
+        </h3>
+
+        <form
+          onSubmit={handleMemberLogin}
+          className="space-y-3"
+        >
+          <input
+            type="email"
+            placeholder="E-Mail-Adresse"
+            value={memberEmail}
+            onChange={(e) =>
+              setMemberEmail(e.target.value)
+            }
+            className="w-full rounded-xl border border-[#ddd4c8] px-4 py-3"
+            required
+          />
+
+          <input
+            type="password"
+            placeholder="Passwort"
+            value={memberPassword}
+            onChange={(e) =>
+              setMemberPassword(e.target.value)
+            }
+            className="w-full rounded-xl border border-[#ddd4c8] px-4 py-3"
+            required
+          />
+
+          {memberLoginError && (
+            <p className="text-sm text-red-600">
+              {memberLoginError}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            className="w-full rounded-xl bg-[#3f6f55] py-3 font-semibold text-white transition hover:bg-[#335945]"
+          >
+            Anmelden
+          </button>
+
+          <Link
+            href="/mitglieder/passwort-vergessen"
+            className="block text-center text-sm text-[#3f6f55] hover:underline"
+          >
+            Passwort vergessen?
+          </Link>
+        </form>
+      </div>
+    )}
+  </div>
+
+  <a
+    href="#beitritt"
+    className="rounded-full bg-[#3f6f55] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#335945]"
+  >
+    Mitglied werden
+  </a>
+</div>
   </div>
 
   {menuOpen && (
@@ -616,80 +721,122 @@ export default function Home() {
       </section>
 
       <footer className="mt-24 rounded-t-[40px] bg-[#2f4f3d] text-white">
-  <div className="mx-auto max-w-7xl px-8 py-16">
+        <div className="mx-auto max-w-7xl px-8 py-16">
+          <div className="grid gap-12 md:grid-cols-4">
 
-    <div className="grid gap-12 md:grid-cols-3">
+            {/* Verein */}
+            <div>
+              <h3 className="mb-4 text-2xl font-bold">
+                Förderverein Kita am BiZ e. V.
+              </h3>
 
-      <div>
-        <h3 className="mb-4 text-2xl font-bold">
-          Förderverein Kita am BiZ e. V.
-        </h3>
+              <p className="leading-7 text-[#d8e3d5]">
+                Gemeinsam für unsere Kinder.
+                Unterstützung von Projekten,
+                Veranstaltungen und Anschaffungen
+                für die Kita am BiZ.
+              </p>
+            </div>
 
-        <p className="leading-7 text-[#d8e3d5]">
-          Gemeinsam für unsere Kinder.
-          Unterstützung von Projekten,
-          Veranstaltungen und Anschaffungen
-          für die Kita am BiZ.
-        </p>
-      </div>
+            {/* Kontakt */}
+            <div>
+              <h4 className="mb-4 text-lg font-semibold">
+                Kontakt
+              </h4>
 
-      <div>
-        <h4 className="mb-4 text-lg font-semibold">
-          Kontakt
-        </h4>
+              <ul className="space-y-3 text-[#d8e3d5]">
+                <li>Von-Steuben-Straße 31</li>
+                <li>67549 Worms</li>
+                <li>0172 2686580</li>
+                <li>info@foerderverein-kita-am-biz.de</li>
+              </ul>
+            </div>
 
-        <ul className="space-y-3 text-[#d8e3d5]">
-          <li>Von-Steuben-Straße 31</li>
-          <li>67549 Worms</li>
-          <li>info@foerderverein-kita-am-biz.de</li>
-        </ul>
-      </div>
+            {/* Verein */}
+            <div>
+              <h4 className="mb-4 text-lg font-semibold">
+                Verein
+              </h4>
 
-      <div>
-        <h4 className="mb-4 text-lg font-semibold">
-          Schnellzugriff
-        </h4>
+              <div className="flex flex-col gap-3">
+                <a
+                  href="#beitritt"
+                  className="text-[#d8e3d5] transition hover:text-[#d4a84f]"
+                >
+                  Mitglied werden
+                </a>
 
-        <div className="flex flex-col gap-3">
-          <Link
-            href="#beitritt"
-            className="text-[#d8e3d5] transition hover:text-[#d4a84f]"
-          >
-            Mitglied werden
-          </Link>
+                <Link
+                  href="/spenden"
+                  className="text-[#d8e3d5] transition hover:text-[#d4a84f]"
+                >
+                  Spenden
+                </Link>
 
-          <Link
-            href="/mitglieder/login"
-            className="text-[#d8e3d5] transition hover:text-[#d4a84f]"
-          >
-            Mitgliederbereich
-          </Link>
+                <Link
+                  href="/satzung"
+                  className="text-[#d8e3d5] transition hover:text-[#d4a84f]"
+                >
+                  Satzung
+                </Link>
 
-          <Link
-            href="/datenschutz"
-            className="text-[#d8e3d5] transition hover:text-[#d4a84f]"
-          >
-            Datenschutz
-          </Link>
+                <a
+                  href="#projekte"
+                  className="text-[#d8e3d5] transition hover:text-[#d4a84f]"
+                >
+                  Projekte
+                </a>
+              </div>
+            </div>
 
-          <Link
-            href="/impressum"
-            className="text-[#d8e3d5] transition hover:text-[#d4a84f]"
-          >
-            Impressum
-          </Link>
+            {/* Mitglieder & Rechtliches */}
+            <div>
+              <h4 className="mb-4 text-lg font-semibold">
+                Mitglieder & Rechtliches
+              </h4>
+
+              <div className="flex flex-col gap-3">
+                <Link
+                  href="/mitglieder/login"
+                  className="text-[#d8e3d5] transition hover:text-[#d4a84f]"
+                >
+                  Mitgliederbereich
+                </Link>
+
+                <Link
+                  href="/datenschutz"
+                  className="text-[#d8e3d5] transition hover:text-[#d4a84f]"
+                >
+                  Datenschutz
+                </Link>
+
+                <Link
+                  href="/impressum"
+                  className="text-[#d8e3d5] transition hover:text-[#d4a84f]"
+                >
+                  Impressum
+                </Link>
+              </div>
+            </div>
+
+          </div>
+
+          <div className="mt-12 border-t border-white/10 pt-6 text-center text-sm text-[#d8e3d5]">
+            <p>
+              © {new Date().getFullYear()} Förderverein Kita am BiZ e. V.
+            </p>
+
+            <p className="mt-2">
+              Vereinsregister: VR 42662 · Amtsgericht Mainz
+            </p>
+
+            <p className="mt-2">
+              Vertreten durch den Vorstand:
+              Matthias Dengler · Mario Mai · Johanna Ehses
+            </p>
+          </div>
         </div>
-      </div>
-
-    </div>
-
-    <div className="mt-12 border-t border-white/10 pt-6 text-center text-sm text-[#d8e3d5]">
-      © {new Date().getFullYear()} Förderverein Kita am BiZ e. V.
-      Alle Rechte vorbehalten.
-    </div>
-
-  </div>
-</footer>
+      </footer>
     </main>
   );
 }
