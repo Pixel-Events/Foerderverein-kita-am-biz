@@ -69,8 +69,8 @@ export async function POST(request: Request) {
           data.paymentMethod || "sepa",
 
         iban: data.iban || null,
-        accountHolder:
-          data.accountHolder || null,
+        accountHolder: data.accountHolder || null,
+        mandateReference: data.mandateReference || null,
       },
     });
 

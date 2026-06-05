@@ -174,6 +174,12 @@ export default function NeuesMitgliedPage() {
               className="rounded-2xl border border-[#ddd4c8] bg-white px-5 py-4 text-black placeholder:text-gray-400"
             />
 
+            <input
+              name="mandateReference"
+              placeholder="Mandatsreferenz"
+              className="rounded-2xl border border-[#ddd4c8] bg-white px-5 py-4 text-black placeholder:text-gray-400"
+            />
+
             <select
               name="status"
               defaultValue="Aktiv"
