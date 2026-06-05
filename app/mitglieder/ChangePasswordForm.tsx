@@ -30,8 +30,10 @@ export default function ChangePasswordForm() {
     }
 
     setMessage("Passwort wurde erfolgreich geändert.");
-    form.reset();
-  }
+
+        setTimeout(() => {
+        window.location.href = "/mitglieder";
+        }, 1000);
 
   return (
     <form onSubmit={handleChangePassword} className="mt-8 rounded-3xl bg-[#f8f5ee] p-6">
