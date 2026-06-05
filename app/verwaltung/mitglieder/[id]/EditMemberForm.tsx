@@ -26,6 +26,7 @@ export default function EditMemberForm({ member }: { member: any }) {
       paymentMethod: formData.get("paymentMethod"),
       accountHolder: formData.get("accountHolder"),
       iban: formData.get("iban"),
+      mandatsreference: formData.get("mandateReference"),
       status: formData.get("status"),
     };
 
