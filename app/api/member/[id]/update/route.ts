@@ -1,15 +1,12 @@
 import { NextResponse } from "next/server";
 import { prisma } from "../../../../../lib/prisma";
 
-type RouteContext = {
-  params: Promise<{
-    id: string;
-  }>;
-};
-
-export async function PATCH(request: Request, { params }: RouteContext) {
+export async function PATCH(
+  request: Request,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
-    const { id } = await params;
+    const { id } = await context.params;
     const data = await request.json();
 
     const membershipFee = Number(data.membershipFee);
