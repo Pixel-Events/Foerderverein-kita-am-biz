@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   const [membershipFee, setMembershipFee] = useState("24");
@@ -613,6 +614,82 @@ export default function Home() {
           </button>
         </form>
       </section>
+
+      <footer className="mt-24 rounded-t-[40px] bg-[#2f4f3d] text-white">
+  <div className="mx-auto max-w-7xl px-8 py-16">
+
+    <div className="grid gap-12 md:grid-cols-3">
+
+      <div>
+        <h3 className="mb-4 text-2xl font-bold">
+          Förderverein Kita am BiZ e. V.
+        </h3>
+
+        <p className="leading-7 text-[#d8e3d5]">
+          Gemeinsam für unsere Kinder.
+          Unterstützung von Projekten,
+          Veranstaltungen und Anschaffungen
+          für die Kita am BiZ.
+        </p>
+      </div>
+
+      <div>
+        <h4 className="mb-4 text-lg font-semibold">
+          Kontakt
+        </h4>
+
+        <ul className="space-y-3 text-[#d8e3d5]">
+          <li>Von-Steuben-Straße 31</li>
+          <li>67549 Worms</li>
+          <li>info@foerderverein-kita-am-biz.de</li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 className="mb-4 text-lg font-semibold">
+          Schnellzugriff
+        </h4>
+
+        <div className="flex flex-col gap-3">
+          <Link
+            href="#beitritt"
+            className="text-[#d8e3d5] transition hover:text-[#d4a84f]"
+          >
+            Mitglied werden
+          </Link>
+
+          <Link
+            href="/mitglieder/login"
+            className="text-[#d8e3d5] transition hover:text-[#d4a84f]"
+          >
+            Mitgliederbereich
+          </Link>
+
+          <Link
+            href="/datenschutz"
+            className="text-[#d8e3d5] transition hover:text-[#d4a84f]"
+          >
+            Datenschutz
+          </Link>
+
+          <Link
+            href="/impressum"
+            className="text-[#d8e3d5] transition hover:text-[#d4a84f]"
+          >
+            Impressum
+          </Link>
+        </div>
+      </div>
+
+    </div>
+
+    <div className="mt-12 border-t border-white/10 pt-6 text-center text-sm text-[#d8e3d5]">
+      © {new Date().getFullYear()} Förderverein Kita am BiZ e. V.
+      Alle Rechte vorbehalten.
+    </div>
+
+  </div>
+</footer>
     </main>
   );
 }
