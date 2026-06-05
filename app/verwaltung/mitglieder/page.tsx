@@ -3,6 +3,8 @@ import { prisma } from "../../../lib/prisma";
 import LogoutButton from "../LogoutButton";
 import MembersTable from "./MembersTable";
 
+export const dynamic = "force-dynamic";
+
 export default async function MitgliederPage() {
   const members = await prisma.member.findMany({
     orderBy: {
