@@ -26,7 +26,7 @@ export default function PasswortVergessenPage() {
 
     setMessage(
       result.message ||
-        "Falls ein Mitglied mit dieser E-Mail existiert, wurde eine E-Mail versendet."
+        "E-Mail mit Link zum zurücksetzen an angegebene E-Mail-Adresse versendet."
     );
   }
 
