@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "../../../../../lib/prisma";
 import bcrypt from "bcryptjs";
 import { sendMail } from "../../../../../lib/mail";
+import { emailLayout } from "../../../../../lib/emailTemplates";
 
 type RouteContext = {
   params: Promise<{
@@ -84,36 +85,41 @@ export async function POST(request: Request, { params }: RouteContext) {
       await sendMail({
         to: member.email,
         subject: "Ihr Zugang zum Mitgliederbereich",
-        html: `
-          <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #2f2f2f;">
-            <h2 style="color: #3f6f55;">Willkommen im Förderverein Kita am BiZ e. V.</h2>
+        html: emailLayout({
+  title: "Willkommen im Förderverein",
+  intro:
+    "Ihr Mitgliedsantrag wurde erfolgreich angenommen.",
+  buttonText: "Mitgliederbereich öffnen",
+  buttonUrl: loginUrl,
+  children: `
+    <p>Hallo ${member.firstName},</p>
 
-            <p>Hallo ${member.firstName},</p>
+    <p>
+      Wir freuen uns, Sie als Mitglied im Förderverein Kita am BiZ e. V.
+      begrüßen zu dürfen.
+    </p>
 
-            <p>Ihr Mitgliedsantrag wurde angenommen. Sie wurden als Mitglied im Förderverein Kita am BiZ e. V. aufgenommen.</p>
+    <p>
+      <strong>Mitgliedsnummer:</strong><br />
+      ${member.memberNumber}
+    </p>
 
-            <p><strong>Mitgliedsnummer:</strong> ${member.memberNumber}</p>
+    <p>
+      <strong>E-Mail:</strong><br />
+      ${member.email}
+    </p>
 
-            <p>Sie können sich ab sofort im Mitgliederbereich einloggen:</p>
+    <p>
+      <strong>Initialpasswort:</strong><br />
+      ${initialPassword}
+    </p>
 
-            <p>
-              <a href="${loginUrl}" style="display:inline-block;background:#3f6f55;color:white;padding:12px 18px;border-radius:999px;text-decoration:none;">
-                Zum Mitgliederbereich
-              </a>
-            </p>
-
-            <p><strong>E-Mail:</strong> ${member.email}</p>
-            <p><strong>Initialpasswort:</strong> ${initialPassword}</p>
-
-            <p>Bitte ändern Sie Ihr Passwort nach dem ersten Login.</p>
-
-            <p>
-              Vielen Dank für Ihre Unterstützung!<br />
-              Förderverein Kita am BiZ e. V.
-            </p>
-          </div>
-        `,
-      });
+    <p>
+      Aus Sicherheitsgründen müssen Sie Ihr Passwort beim ersten Login
+      ändern.
+    </p>
+  `,
+}),
     } catch (mailError) {
       console.error("WELCOME MAIL ERROR:", mailError);
     }
