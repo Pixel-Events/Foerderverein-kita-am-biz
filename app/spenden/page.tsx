@@ -53,30 +53,6 @@ export default function SpendenPage() {
             </div>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-3">
-            {["10 €", "25 €", "50 €"].map((amount) => (
-              <div
-                key={amount}
-                className="rounded-3xl border border-[#ece6dc] bg-[#f8f5ee] p-6 text-center"
-              >
-                <p
-                  style={{ fontFamily: "var(--font-baloo)" }}
-                  className="text-4xl font-bold text-[#3f6f55]"
-                >
-                  {amount}
-                </p>
-                <p className="mt-2 text-sm text-[#666]">
-                  hilft direkt bei Projekten für die Kinder
-                </p>
-              </div>
-            ))}
-          </div>
-
-          <p className="mt-10 rounded-3xl bg-[#fff8df] p-5 text-sm leading-7 text-[#6f5a00]">
-            Hinweis: Für Spenden kann auf Wunsch eine Spendenbescheinigung
-            ausgestellt werden. Bitte gib dafür deinen Namen und deine Adresse im
-            Verwendungszweck oder per E-Mail an.
-          </p>
         </section>
       </div>
     </main>
