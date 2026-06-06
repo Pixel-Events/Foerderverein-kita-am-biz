@@ -14,14 +14,17 @@ export default function Home() {
   const [memberPassword, setMemberPassword] = useState("");
   const [memberLoginError, setMemberLoginError] = useState("");
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [formError, setFormError] = useState("");
   
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
   e.preventDefault();
 
+  setFormError("");
+
   const form = e.currentTarget;
 
   if (membershipFee === "custom" && Number(customFee) < 24) {
-    alert("Der eigene Jahresbeitrag muss mindestens 24 € betragen.");
+    setFormError("Der eigene Jahresbeitrag muss mindestens 24 € betragen.");
     return;
   }
 
@@ -57,7 +60,9 @@ export default function Home() {
   const result = await response.json();
 
   if (!response.ok) {
-    alert(result.message || "Mitgliedsantrag konnte nicht übermittelt werden.");
+    setFormError(
+      result.message || "Mitgliedsantrag konnte nicht übermittelt werden."
+    );
     return;
   }
 
@@ -711,7 +716,11 @@ async function handleMemberLogin(e: React.FormEvent<HTMLFormElement>) {
               </div>
             </div>
           </div>
-
+          {formError && (
+            <div className="rounded-2xl bg-red-50 p-4 text-sm font-semibold text-red-700">
+              {formError}
+            </div>
+          )}
           <button
             type="submit"
             className="mt-10 w-full rounded-full bg-[#8daa91] px-10 py-4 font-semibold text-white transition hover:bg-[#78987d] sm:w-auto"
