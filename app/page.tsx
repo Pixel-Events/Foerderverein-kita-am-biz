@@ -13,6 +13,7 @@ export default function Home() {
   const [memberEmail, setMemberEmail] = useState("");
   const [memberPassword, setMemberPassword] = useState("");
   const [memberLoginError, setMemberLoginError] = useState("");
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
   e.preventDefault();
@@ -60,7 +61,7 @@ export default function Home() {
     return;
   }
 
-  alert("Mitgliedsantrag erfolgreich übermittelt.");
+  setShowSuccessModal(true);
 
   form.reset();
   setMembershipFee("24");
@@ -837,6 +838,46 @@ async function handleMemberLogin(e: React.FormEvent<HTMLFormElement>) {
           </div>
         </div>
       </footer>
+
+      {showSuccessModal && (
+        <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/40 p-6 backdrop-blur-sm">
+          <div className="w-full max-w-lg rounded-[32px] bg-white p-8 shadow-2xl">
+            <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#eaf2ea] text-3xl">
+              🎉
+            </div>
+
+            <p className="mb-2 text-sm font-semibold uppercase tracking-[0.3em] text-[#8daa91]">
+              Vielen Dank
+            </p>
+
+            <h2
+              style={{ fontFamily: "var(--font-baloo)" }}
+              className="mb-4 text-4xl font-bold text-[#3f6f55]"
+            >
+              Antrag erfolgreich übermittelt
+            </h2>
+
+            <p className="mb-8 leading-8 text-[#555]">
+              Vielen Dank für Ihr Interesse am Förderverein Kita am BiZ e. V.
+              <br />
+              <br />
+              Ihr Mitgliedsantrag wurde erfolgreich übermittelt und wird nun geprüft.
+              <br />
+              <br />
+              Wir melden uns schnellstmöglich bei Ihnen und informieren Sie über die
+              weiteren Schritte.
+            </p>
+
+            <button
+              onClick={() => setShowSuccessModal(false)}
+              className="w-full rounded-full bg-[#3f6f55] px-8 py-4 font-semibold text-white transition hover:bg-[#335945]"
+            >
+              Verstanden
+            </button>
+          </div>
+        </div>
+      )}
+
     </main>
   );
 }
