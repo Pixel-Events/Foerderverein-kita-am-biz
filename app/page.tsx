@@ -425,7 +425,11 @@ async function handleMemberLogin(e: React.FormEvent<HTMLFormElement>) {
           alt={item.title}
           width={600}
           height={500}
-          className="h-full w-full object-cover"
+          className={`h-full w-full object-cover ${
+            item.title === "Taschentücher"
+              ? "object-[center_15%]"
+              : "object-center"
+          }`}
         />
       </div>
 
