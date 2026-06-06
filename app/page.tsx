@@ -868,13 +868,13 @@ async function handleMemberLogin(e: React.FormEvent<HTMLFormElement>) {
           </h2>
 
           <p className="mb-8 leading-8 text-[#555]">
-            Vielen Dank für Ihr Interesse am Förderverein Kita am BiZ e. V.
+            Vielen Dank für dein Interesse am Förderverein Kita am BiZ e. V.
             <br />
             <br />
-            Ihr Mitgliedsantrag wurde erfolgreich übermittelt und wird nun geprüft.
+            Dein Mitgliedsantrag wurde erfolgreich übermittelt und wird nun geprüft.
             <br />
             <br />
-            Wir melden uns schnellstmöglich bei Ihnen und informieren Sie über die
+            Wir melden uns schnellstmöglich bei dir und informieren dich über die
             weiteren Schritte.
           </p>
 
