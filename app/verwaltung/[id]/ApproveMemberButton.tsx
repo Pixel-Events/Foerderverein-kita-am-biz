@@ -3,10 +3,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const [showConfirmModal, setShowConfirmModal] = useState(false);
+
 
 export default function ApproveMemberButton({ id }: { id: string }) {
   const router = useRouter();
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   async function approveMember() {
     const confirmed = confirm(
