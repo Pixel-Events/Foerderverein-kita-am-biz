@@ -853,7 +853,8 @@ async function handleMemberLogin(e: React.FormEvent<HTMLFormElement>) {
       </footer>
 
       {showSuccessModal && (
-        <div className="w-full max-w-lg rounded-[32px] bg-white p-8 text-center shadow-2xl">
+  <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-6 backdrop-blur-sm">
+    <div className="w-full max-w-lg rounded-[32px] bg-white p-8 text-center shadow-2xl">
 
           <p className="mb-2 text-sm font-semibold uppercase tracking-[0.3em] text-[#8daa91]">
             Vielen Dank
@@ -885,7 +886,8 @@ async function handleMemberLogin(e: React.FormEvent<HTMLFormElement>) {
           </button>
 
         </div>
-      )}
+  </div>
+)}
 
     </main>
   );
