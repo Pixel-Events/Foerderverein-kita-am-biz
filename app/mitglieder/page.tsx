@@ -52,8 +52,8 @@ export default async function MitgliederBereichPage() {
           </h1>
 
           <p className="mb-8 max-w-3xl text-[#555]">
-            Willkommen in Ihrem persönlichen Mitgliederbereich. Hier können Sie
-            Ihre Mitgliedsdaten einsehen, ausgewählte Daten bearbeiten und Ihr
+            Willkommen in deinem persönlichen Mitgliederbereich. Hier kannst du deine
+            Mitgliedsdaten einsehen, ausgewählte Daten bearbeiten und dein
             Passwort ändern.
           </p>
 
@@ -115,7 +115,7 @@ export default async function MitgliederBereichPage() {
             </h2>
 
             <p className="mb-5 text-[#666]">
-              Hier finden Sie wichtige Dokumente des Fördervereins.
+              Hier findest du wichtige Dokumente des Fördervereins.
             </p>
 
             <a
