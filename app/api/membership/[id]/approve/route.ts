@@ -119,10 +119,11 @@ export async function POST(request: Request, { params }: RouteContext) {
       ändern.
     </p>
   `,
-}),
-    } catch (mailError) {
-      console.error("WELCOME MAIL ERROR:", mailError);
-    }
+    }),
+  });
+} catch (mailError) {
+  console.error("WELCOME MAIL ERROR:", mailError);
+}
 
     return NextResponse.json({
       success: true,
