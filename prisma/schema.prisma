@@ -92,3 +92,14 @@ model Donation {
 
   receiptStatus String @default("Offen")
 }
+
+model Document {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  title     String
+  category  String
+  fileUrl   String
+
+  visible   Boolean  @default(true)
+}
