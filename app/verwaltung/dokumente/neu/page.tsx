@@ -1,10 +1,54 @@
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function NeuesDokumentPage() {
+  const router = useRouter();
+
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+
+  async function handleUpload(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    setLoading(true);
+    setMessage("");
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    const visibleCheckbox = form.elements.namedItem(
+      "visible"
+    ) as HTMLInputElement;
+
+    formData.set("visible", visibleCheckbox.checked ? "true" : "false");
+
+    const response = await fetch("/api/documents/create", {
+      method: "POST",
+      body: formData,
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      setLoading(false);
+      setMessage(result.message || "Dokument konnte nicht gespeichert werden.");
+      return;
+    }
+
+    setMessage("Dokument wurde erfolgreich gespeichert.");
+
+    setTimeout(() => {
+      router.push("/verwaltung/dokumente");
+      router.refresh();
+    }, 1000);
+  }
+
   return (
     <main className="min-h-screen bg-[#f8f5ee] px-6 py-12">
       <div className="mx-auto max-w-3xl">
-
         <Link
           href="/verwaltung/dokumente"
           className="inline-flex items-center gap-2 rounded-full border border-[#d8cfc3] bg-white px-6 py-3 font-semibold text-[#3f6f55]"
@@ -24,26 +68,20 @@ export default function NeuesDokumentPage() {
             Neues Dokument
           </h1>
 
-          <form className="mt-8 space-y-6">
-
+          <form onSubmit={handleUpload} className="mt-8 space-y-6">
             <div>
-              <label className="mb-2 block font-medium">
-                Titel
-              </label>
-
+              <label className="mb-2 block font-medium">Titel</label>
               <input
                 type="text"
                 name="title"
+                required
                 className="w-full rounded-2xl border border-[#d8cfc3] px-4 py-3"
-                placeholder="z.B. Satzung 2026"
+                placeholder="z. B. Satzung 2026"
               />
             </div>
 
             <div>
-              <label className="mb-2 block font-medium">
-                Kategorie
-              </label>
-
+              <label className="mb-2 block font-medium">Kategorie</label>
               <select
                 name="category"
                 className="w-full rounded-2xl border border-[#d8cfc3] px-4 py-3"
@@ -57,36 +95,34 @@ export default function NeuesDokumentPage() {
             </div>
 
             <div>
-              <label className="mb-2 block font-medium">
-                Dokument
-              </label>
-
+              <label className="mb-2 block font-medium">Dokument</label>
               <input
                 type="file"
+                name="file"
                 accept=".pdf"
+                required
                 className="w-full rounded-2xl border border-[#d8cfc3] px-4 py-3"
               />
             </div>
 
-            <div className="flex items-center gap-3">
-              <input
-                id="visible"
-                type="checkbox"
-                defaultChecked
-              />
+            <label className="flex items-center gap-3">
+              <input name="visible" type="checkbox" defaultChecked />
+              <span>Für Mitglieder sichtbar</span>
+            </label>
 
-              <label htmlFor="visible">
-                Für Mitglieder sichtbar
-              </label>
-            </div>
+            {message && (
+              <p className="rounded-2xl bg-[#f8f5ee] p-4 text-sm font-semibold text-[#3f6f55]">
+                {message}
+              </p>
+            )}
 
             <button
               type="submit"
-              className="rounded-full bg-[#3f6f55] px-8 py-4 font-semibold text-white transition hover:bg-[#335945]"
+              disabled={loading}
+              className="rounded-full bg-[#3f6f55] px-8 py-4 font-semibold text-white transition hover:bg-[#335945] disabled:opacity-60"
             >
-              Dokument speichern
+              {loading ? "Wird hochgeladen..." : "Dokument speichern"}
             </button>
-
           </form>
         </div>
       </div>
