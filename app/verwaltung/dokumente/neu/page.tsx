@@ -70,21 +70,21 @@ export default function NeuesDokumentPage() {
 
           <form onSubmit={handleUpload} className="mt-8 space-y-6">
             <div>
-              <label className="mb-2 block font-medium">Titel</label>
+              <label className="mb-2 block font-medium text-black">Titel</label>
               <input
                 type="text"
                 name="title"
                 required
-                className="w-full rounded-2xl border border-[#d8cfc3] px-4 py-3"
+                className="w-full rounded-2xl border border-[#d8cfc3] px-4 py-3 text-black"
                 placeholder="z. B. Satzung 2026"
               />
             </div>
 
             <div>
-              <label className="mb-2 block font-medium">Kategorie</label>
+              <label className="mb-2 block font-medium text-black">Kategorie</label>
               <select
                 name="category"
-                className="w-full rounded-2xl border border-[#d8cfc3] px-4 py-3"
+                className="w-full rounded-2xl border border-[#d8cfc3] px-4 py-3 text-black"
               >
                 <option>Satzung</option>
                 <option>Protokoll</option>
@@ -95,17 +95,17 @@ export default function NeuesDokumentPage() {
             </div>
 
             <div>
-              <label className="mb-2 block font-medium">Dokument</label>
+              <label className="mb-2 block font-medium text-black">Dokument</label>
               <input
                 type="file"
                 name="file"
                 accept=".pdf"
                 required
-                className="w-full rounded-2xl border border-[#d8cfc3] px-4 py-3"
+                className="w-full rounded-2xl border border-[#d8cfc3] px-4 py-3 text-black"
               />
             </div>
 
-            <label className="flex items-center gap-3">
+            <label className="flex items-center gap-3 text-black">
               <input name="visible" type="checkbox" defaultChecked />
               <span>Für Mitglieder sichtbar</span>
             </label>
