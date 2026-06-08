@@ -1,129 +1,105 @@
-"use client";
-
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { prisma } from "../../../../lib/prisma";
 
-export default function NeuesDokumentPage() {
-  const router = useRouter();
+export const dynamic = "force-dynamic";
 
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
-
-  async function handleUpload(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-
-    setLoading(true);
-    setMessage("");
-
-    const form = e.currentTarget;
-    const formData = new FormData(form);
-
-    const visibleCheckbox = form.elements.namedItem(
-      "visible"
-    ) as HTMLInputElement;
-
-    formData.set("visible", visibleCheckbox.checked ? "true" : "false");
-
-    const response = await fetch("/api/documents/create", {
-      method: "POST",
-      body: formData,
-    });
-
-    const result = await response.json();
-
-    if (!response.ok) {
-      setLoading(false);
-      setMessage(result.message || "Dokument konnte nicht gespeichert werden.");
-      return;
-    }
-
-    setMessage("Dokument wurde erfolgreich gespeichert.");
-
-    setTimeout(() => {
-      router.push("/verwaltung/dokumente");
-      router.refresh();
-    }, 1000);
-  }
+export default async function DokumentePage() {
+  const documents = await prisma.document.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
 
   return (
-    <main className="min-h-screen bg-[#f8f5ee] px-6 py-12">
-      <div className="mx-auto max-w-3xl">
+    <main className="min-h-screen bg-[#f8f5ee] px-6 py-12 text-[#2f2f2f]">
+      <div className="mx-auto max-w-6xl">
         <Link
-          href="/verwaltung/dokumente"
+          href="/verwaltung"
           className="inline-flex items-center gap-2 rounded-full border border-[#d8cfc3] bg-white px-6 py-3 font-semibold text-[#3f6f55]"
         >
-          ← Zurück
+          ← Zurück zur Verwaltung
         </Link>
 
         <div className="mt-8 rounded-[36px] bg-white p-8 shadow-xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#8daa91]">
-            Dokumente
-          </p>
-
-          <h1
-            style={{ fontFamily: "var(--font-baloo)" }}
-            className="mt-2 text-5xl font-bold text-[#3f6f55]"
-          >
-            Neues Dokument
-          </h1>
-
-          <form onSubmit={handleUpload} className="mt-8 space-y-6">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
-              <label className="mb-2 block font-medium text-black">Titel</label>
-              <input
-                type="text"
-                name="title"
-                required
-                className="w-full rounded-2xl border border-[#d8cfc3] px-4 py-3 text-black"
-                placeholder="z. B. Satzung 2026"
-              />
-            </div>
-
-            <div>
-              <label className="mb-2 block font-medium text-black">Kategorie</label>
-              <select
-                name="category"
-                className="w-full rounded-2xl border border-[#d8cfc3] px-4 py-3 text-black"
-              >
-                <option>Satzung</option>
-                <option>Protokoll</option>
-                <option>Einladung</option>
-                <option>Formular</option>
-                <option>Sonstiges</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="mb-2 block font-medium text-black">Dokument</label>
-              <input
-                type="file"
-                name="file"
-                accept=".pdf"
-                required
-                className="w-full rounded-2xl border border-[#d8cfc3] px-4 py-3 text-black"
-              />
-            </div>
-
-            <label className="flex items-center gap-3 text-black">
-              <input name="visible" type="checkbox" defaultChecked />
-              <span>Für Mitglieder sichtbar</span>
-            </label>
-
-            {message && (
-              <p className="rounded-2xl bg-[#f8f5ee] p-4 text-sm font-semibold text-[#3f6f55]">
-                {message}
+              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#8daa91]">
+                Verwaltung
               </p>
-            )}
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="rounded-full bg-[#3f6f55] px-8 py-4 font-semibold text-white transition hover:bg-[#335945] disabled:opacity-60"
+              <h1
+                style={{ fontFamily: "var(--font-baloo)" }}
+                className="mt-2 text-5xl font-bold text-[#3f6f55]"
+              >
+                Dokumente
+              </h1>
+            </div>
+
+            <Link
+              href="/verwaltung/dokumente/neu"
+              className="rounded-full bg-[#3f6f55] px-6 py-3 text-center font-semibold text-white transition hover:bg-[#335945]"
             >
-              {loading ? "Wird hochgeladen..." : "Dokument speichern"}
-            </button>
-          </form>
+              + Dokument
+            </Link>
+          </div>
+
+          <div className="mt-8 overflow-hidden rounded-3xl border border-[#ece6dc]">
+            <table className="w-full text-left">
+              <thead className="bg-[#eaf2ea] text-[#3f6f55]">
+                <tr>
+                  <th className="p-4">Titel</th>
+                  <th className="p-4">Kategorie</th>
+                  <th className="p-4">Sichtbar</th>
+                  <th className="p-4">Datum</th>
+                  <th className="p-4">Aktion</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {documents.map((document) => (
+                  <tr
+                    key={document.id}
+                    className="border-t border-[#ece6dc]"
+                  >
+                    <td className="p-4 font-semibold">
+                      {document.title}
+                    </td>
+
+                    <td className="p-4">
+                      {document.category}
+                    </td>
+
+                    <td className="p-4">
+                      {document.visible ? "Ja" : "Nein"}
+                    </td>
+
+                    <td className="p-4">
+                      {new Date(document.createdAt).toLocaleDateString(
+                        "de-DE"
+                      )}
+                    </td>
+
+                    <td className="p-4">
+                      <a
+                        href={document.fileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="rounded-full bg-[#3f6f55] px-4 py-2 text-sm font-semibold text-white"
+                      >
+                        Öffnen
+                      </a>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {documents.length === 0 && (
+              <div className="p-8 text-center text-[#666]">
+                Noch keine Dokumente vorhanden.
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </main>
