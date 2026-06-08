@@ -42,13 +42,13 @@ export default async function DokumentePage() {
             </Link>
           </div>
 
-          <div className="mt-8 overflow-hidden rounded-3xl border border-[#ece6dc]">
-            <table className="w-full">
-              <thead className="bg-[#f8f5ee]">
+          <div className="mt-8 overflow-hidden rounded-3xl border border-[#ece6dc] text-black">
+            <table className="w-full text-black">
+              <thead className="bg-[#f8f5ee] text-black">
                 <tr>
-                  <th className="p-4 text-left">Titel</th>
-                  <th className="p-4 text-left">Kategorie</th>
-                  <th className="p-4 text-left">Sichtbar</th>
+                  <th className="p-4 text-left text-black">Titel</th>
+                  <th className="p-4 text-left text-black">Kategorie</th>
+                  <th className="p-4 text-left text-black">Sichtbar</th>
                 </tr>
               </thead>
 
@@ -56,17 +56,17 @@ export default async function DokumentePage() {
                 {documents.map((document) => (
                   <tr
                     key={document.id}
-                    className="border-t border-[#ece6dc]"
+                    className="border-t border-[#ece6dc] text-black"
                   >
-                    <td className="p-4">
+                    <td className="p-4 text-black">
                       {document.title}
                     </td>
 
-                    <td className="p-4">
+                    <td className="p-4 text-black">
                       {document.category}
                     </td>
 
-                    <td className="p-4">
+                    <td className="p-4 text-black">
                       {document.visible ? "Ja" : "Nein"}
                     </td>
                   </tr>
