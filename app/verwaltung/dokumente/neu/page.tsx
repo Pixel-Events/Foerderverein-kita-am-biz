@@ -44,55 +44,40 @@ export default async function DokumentePage() {
           </div>
 
           <div className="mt-8 overflow-hidden rounded-3xl border border-[#ece6dc]">
-            <table className="w-full text-left text-black">
-              <thead className="bg-[#eaf2ea] text-[#3f6f55]">
-                <tr>
-                  <th className="p-4 text-black">Titel</th>
-                  <th className="p-4 text-black">Kategorie</th>
-                  <th className="p-4 text-black">Sichtbar</th>
-                  <th className="p-4 text-black">Datum</th>
-                  <th className="p-4 text-black">Aktion</th>
-                </tr>
-              </thead>
+           <table className="w-full text-left text-black">
+  <thead className="bg-[#eaf2ea] text-black">
+    <tr className="text-black">
+      <th className="p-4 text-black">Titel</th>
+      <th className="p-4 text-black">Kategorie</th>
+      <th className="p-4 text-black">Sichtbar</th>
+      <th className="p-4 text-black">Datum</th>
+      <th className="p-4 text-black">Aktion</th>
+    </tr>
+  </thead>
 
-              <tbody>
-                {documents.map((document) => (
-                  <tr
-                    key={document.id}
-                    className="border-t border-[#ece6dc]"
-                  >
-                    <td className="p-4 font-semibold text-black">
-                      {document.title}
-                    </td>
-
-                    <td className="p-4 text-black">
-                      {document.category}
-                    </td>
-
-                    <td className="p-4 text-black">
-                      {document.visible ? "Ja" : "Nein"}
-                    </td>
-
-                    <td className="p-4 text-black">
-                      {new Date(document.createdAt).toLocaleDateString(
-                        "de-DE"
-                      )}
-                    </td>
-
-                    <td className="p-4 text-black">
-                      <a
-                        href={document.fileUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="rounded-full bg-[#3f6f55] px-4 py-2 text-sm font-semibold text-white"
-                      >
-                        Öffnen
-                      </a>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+  <tbody className="text-black">
+    {documents.map((document) => (
+      <tr key={document.id} className="border-t border-[#ece6dc] text-black">
+        <td className="p-4 font-semibold text-black">{document.title}</td>
+        <td className="p-4 text-black">{document.category}</td>
+        <td className="p-4 text-black">{document.visible ? "Ja" : "Nein"}</td>
+        <td className="p-4 text-black">
+          {new Date(document.createdAt).toLocaleDateString("de-DE")}
+        </td>
+        <td className="p-4 text-black">
+          <a
+            href={document.fileUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-full bg-[#3f6f55] px-4 py-2 text-sm font-semibold text-white"
+          >
+            Öffnen
+          </a>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
 
             {documents.length === 0 && (
               <div className="p-8 text-center text-black">
