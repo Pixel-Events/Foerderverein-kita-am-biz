@@ -43,7 +43,7 @@ export default async function DokumentePage() {
             </Link>
           </div>
 
-          <div className="mt-8 overflow-hidden rounded-3xl border border-[#ece6dc]">
+          <div className="mt-8 overflow-hidden rounded-3xl border border-[#ece6dc] text-black">
             <table className="w-full text-left">
               <thead className="bg-[#eaf2ea] text-[#3f6f55]">
                 <tr>
