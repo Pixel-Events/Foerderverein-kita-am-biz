@@ -11,7 +11,7 @@ export default async function DokumentePage() {
   });
 
   return (
-    <main className="min-h-screen bg-[#f8f5ee] px-6 py-12 text-[#2f2f2f]">
+    <main className="min-h-screen bg-[#f8f5ee] px-6 py-12 text-[#2f2f2f] text-black">
       <div className="mx-auto max-w-6xl">
         <Link
           href="/verwaltung"
@@ -43,15 +43,15 @@ export default async function DokumentePage() {
             </Link>
           </div>
 
-          <div className="mt-8 overflow-hidden rounded-3xl border border-[#ece6dc] text-black">
-            <table className="w-full text-left">
+          <div className="mt-8 overflow-hidden rounded-3xl border border-[#ece6dc]">
+            <table className="w-full text-left text-black">
               <thead className="bg-[#eaf2ea] text-[#3f6f55]">
                 <tr>
-                  <th className="p-4">Titel</th>
-                  <th className="p-4">Kategorie</th>
-                  <th className="p-4">Sichtbar</th>
-                  <th className="p-4">Datum</th>
-                  <th className="p-4">Aktion</th>
+                  <th className="p-4 text-black">Titel</th>
+                  <th className="p-4 text-black">Kategorie</th>
+                  <th className="p-4 text-black">Sichtbar</th>
+                  <th className="p-4 text-black">Datum</th>
+                  <th className="p-4 text-black">Aktion</th>
                 </tr>
               </thead>
 
@@ -61,25 +61,25 @@ export default async function DokumentePage() {
                     key={document.id}
                     className="border-t border-[#ece6dc]"
                   >
-                    <td className="p-4 font-semibold">
+                    <td className="p-4 font-semibold text-black">
                       {document.title}
                     </td>
 
-                    <td className="p-4">
+                    <td className="p-4 text-black">
                       {document.category}
                     </td>
 
-                    <td className="p-4">
+                    <td className="p-4 text-black">
                       {document.visible ? "Ja" : "Nein"}
                     </td>
 
-                    <td className="p-4">
+                    <td className="p-4 text-black">
                       {new Date(document.createdAt).toLocaleDateString(
                         "de-DE"
                       )}
                     </td>
 
-                    <td className="p-4">
+                    <td className="p-4 text-black">
                       <a
                         href={document.fileUrl}
                         target="_blank"
@@ -95,7 +95,7 @@ export default async function DokumentePage() {
             </table>
 
             {documents.length === 0 && (
-              <div className="p-8 text-center text-[#666]">
+              <div className="p-8 text-center text-black">
                 Noch keine Dokumente vorhanden.
               </div>
             )}
