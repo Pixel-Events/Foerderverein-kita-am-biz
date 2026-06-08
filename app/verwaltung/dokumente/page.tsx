@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "../../../lib/prisma";
+import DeleteDocumentButton from "./DeleteDocumentButton";
 
 export default async function DokumentePage() {
   const documents = await prisma.document.findMany({
@@ -43,43 +44,55 @@ export default async function DokumentePage() {
           </div>
 
           <div className="mt-8 overflow-hidden rounded-3xl border border-[#ece6dc] text-black">
-            <table className="w-full text-black">
-              <thead className="bg-[#f8f5ee] text-black">
-                <tr>
-                  <th className="p-4 text-left text-black">Titel</th>
-                  <th className="p-4 text-left text-black">Kategorie</th>
-                  <th className="p-4 text-left text-black">Sichtbar</th>
-                </tr>
-              </thead>
+  <table className="w-full text-black">
+    <thead className="bg-[#f8f5ee] text-black">
+      <tr>
+        <th className="p-4 text-left text-black">Titel</th>
+        <th className="p-4 text-left text-black">Kategorie</th>
+        <th className="p-4 text-left text-black">Sichtbar</th>
+        <th className="p-4 text-left text-black">Aktion</th>
+      </tr>
+    </thead>
 
-              <tbody>
-                {documents.map((document) => (
-                  <tr
-                    key={document.id}
-                    className="border-t border-[#ece6dc] text-black"
-                  >
-                    <td className="p-4 text-black">
-                      {document.title}
-                    </td>
+    <tbody>
+      {documents.map((document) => (
+        <tr
+          key={document.id}
+          className="border-t border-[#ece6dc] text-black"
+        >
+          <td className="p-4 text-black">{document.title}</td>
 
-                    <td className="p-4 text-black">
-                      {document.category}
-                    </td>
+          <td className="p-4 text-black">{document.category}</td>
 
-                    <td className="p-4 text-black">
-                      {document.visible ? "Ja" : "Nein"}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <td className="p-4 text-black">
+            {document.visible ? "Ja" : "Nein"}
+          </td>
 
-            {documents.length === 0 && (
-              <div className="p-8 text-center text-[#666]">
-                Noch keine Dokumente vorhanden.
-              </div>
-            )}
-          </div>
+          <td className="p-4 text-black">
+            <div className="flex flex-wrap gap-2">
+              <a
+                href={document.fileUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full bg-[#3f6f55] px-4 py-2 text-sm font-semibold text-white"
+              >
+                Öffnen
+              </a>
+
+              <DeleteDocumentButton id={document.id} />
+            </div>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+
+  {documents.length === 0 && (
+    <div className="p-8 text-center text-[#666]">
+      Noch keine Dokumente vorhanden.
+    </div>
+  )}
+</div>
         </div>
       </div>
     </main>
