@@ -2,6 +2,8 @@ import Link from "next/link";
 import { prisma } from "../../../lib/prisma";
 import DeleteDocumentButton from "./DeleteDocumentButton";
 
+export const dynamic = "force-dynamic";
+
 export default async function DokumentePage() {
   const documents = await prisma.document.findMany({
     orderBy: {
