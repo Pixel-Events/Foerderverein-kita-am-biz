@@ -97,11 +97,12 @@ export default function RundmailPage() {
                 PDF-Anhang optional
               </label>
               <input
-                name="attachment"
+                name="attachments"
                 type="file"
                 accept=".pdf"
+                multiple
                 className="w-full rounded-2xl border border-[#d8cfc3] px-4 py-3 text-black"
-              />
+                />
             </div>
 
             {statusMessage && (

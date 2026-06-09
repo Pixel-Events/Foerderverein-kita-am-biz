@@ -9,7 +9,7 @@ export async function POST(request: Request) {
 
     const subject = String(formData.get("subject") || "");
     const message = String(formData.get("message") || "");
-    const attachment = formData.get("attachment") as File | null;
+    const uploadedFiles = formData.getAll("attachments") as File[];
 
     if (!subject || !message) {
       return NextResponse.json(
@@ -18,20 +18,27 @@ export async function POST(request: Request) {
       );
     }
 
-    const attachments = [];
+    const attachments: {
+      filename: string;
+      content: Buffer;
+    }[] = [];
 
-    if (attachment && attachment.size > 0) {
-      if (attachment.type !== "application/pdf") {
+    for (const file of uploadedFiles) {
+      if (!file || file.size === 0) continue;
+
+      if (file.type !== "application/pdf") {
         return NextResponse.json(
-          { message: "Es können nur PDF-Dateien angehängt werden." },
+          {
+            message: "Es können nur PDF-Dateien angehängt werden.",
+          },
           { status: 400 }
         );
       }
 
-      const arrayBuffer = await attachment.arrayBuffer();
+      const arrayBuffer = await file.arrayBuffer();
 
       attachments.push({
-        filename: attachment.name,
+        filename: file.name,
         content: Buffer.from(arrayBuffer),
       });
     }
