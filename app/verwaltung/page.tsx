@@ -4,19 +4,39 @@ import LogoutButton from "./LogoutButton";
 import DeleteApplicationButton from "./DeleteApplicationButton";
 
 export const dynamic = "force-dynamic";
+
 export default async function VerwaltungPage() {
   const applications = await prisma.membershipApplication.findMany({
-  where: {
-    status: {
-      not: "Mitglied",
+    where: {
+      status: {
+        not: "Mitglied",
+      },
     },
-  },
-  orderBy: {
-    createdAt: "desc",
-  },
-});
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
 
   const members = await prisma.member.findMany();
+  const donations = await prisma.donation.findMany();
+  const documents = await prisma.document.findMany();
+
+  const activeMembers = members.filter((m) => m.status === "Aktiv");
+  const restingMembers = members.filter((m) => m.status === "Ruhend");
+
+  const yearlyFees = activeMembers.reduce(
+    (sum, member) => sum + member.membershipFee,
+    0
+  );
+
+  const donationSum = donations.reduce(
+    (sum, donation) => sum + donation.amount,
+    0
+  );
+
+  const openReceipts = donations.filter(
+    (donation) => donation.receiptStatus === "Offen"
+  ).length;
 
   return (
     <main className="min-h-screen bg-[#f8f5ee] px-6 py-12 text-[#2f2f2f]">
@@ -28,7 +48,7 @@ export default async function VerwaltungPage() {
             </h1>
 
             <p className="mt-2 text-[#666]">
-              Verwaltung von Anträgen, Mitgliedern und Vereinsdaten.
+              Verwaltung von Anträgen, Mitgliedern, Beiträgen, Spenden und Dokumenten.
             </p>
           </div>
 
@@ -39,7 +59,7 @@ export default async function VerwaltungPage() {
             >
               + Neues Mitglied
             </Link>
-            
+
             <Link
               href="/verwaltung/mitglieder"
               className="rounded-full bg-[#3f6f55] px-5 py-3 font-semibold text-white transition hover:bg-[#335945]"
@@ -61,40 +81,27 @@ export default async function VerwaltungPage() {
               Spenden
             </Link>
 
+            <Link
+              href="/verwaltung/dokumente"
+              className="rounded-full border border-[#d8cfc3] bg-white px-5 py-3 font-semibold text-[#3f6f55] transition hover:bg-[#f8f5ee]"
+            >
+              Dokumente
+            </Link>
+
             <LogoutButton />
           </div>
         </div>
 
-        <div className="mb-10 grid gap-4 md:grid-cols-5">
-  <DashboardCard
-    label="Offene Anträge"
-    value={applications.length}
-  />
-
-  <DashboardCard
-    label="Mitglieder gesamt"
-    value={members.length}
-  />
-
-  <DashboardCard
-    label="Aktive Mitglieder"
-    value={members.filter((m) => m.status === "Aktiv").length}
-  />
-
-  <DashboardCard
-    label="Ruhend"
-    value={members.filter((m) => m.status === "Ruhend").length}
-  />
-
-  <DashboardCard
-    label="Jahresbeiträge"
-    value={`${members
-      .filter((m) => m.status === "Aktiv")
-      .reduce((sum, member) => sum + member.membershipFee, 0)
-      .toFixed(0)} €`}
-  />
-</div>
-        
+        <div className="mb-10 grid gap-4 md:grid-cols-4 xl:grid-cols-8">
+          <DashboardCard label="Offene Anträge" value={applications.length} />
+          <DashboardCard label="Mitglieder gesamt" value={members.length} />
+          <DashboardCard label="Aktive Mitglieder" value={activeMembers.length} />
+          <DashboardCard label="Ruhend" value={restingMembers.length} />
+          <DashboardCard label="Jahresbeiträge" value={`${yearlyFees.toFixed(0)} €`} />
+          <DashboardCard label="Spenden gesamt" value={`${donationSum.toFixed(0)} €`} />
+          <DashboardCard label="Offene Quittungen" value={openReceipts} />
+          <DashboardCard label="Dokumente" value={documents.length} />
+        </div>
 
         <p className="mb-6 text-[#555]">
           Hier erscheinen alle eingegangenen Beitrittsanträge.
@@ -149,25 +156,21 @@ export default async function VerwaltungPage() {
                   </td>
 
                   <td className="p-4">
-                    {new Date(application.createdAt).toLocaleDateString(
-                      "de-DE"
-                    )}
+                    {new Date(application.createdAt).toLocaleDateString("de-DE")}
                   </td>
 
                   <td className="p-4">
-  <Link
-    href={`/verwaltung/${application.id}`}
-    className="rounded-full bg-[#8daa91] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#78987d]"
-  >
-    Öffnen
-  </Link>
-</td>
+                    <Link
+                      href={`/verwaltung/${application.id}`}
+                      className="rounded-full bg-[#8daa91] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#78987d]"
+                    >
+                      Öffnen
+                    </Link>
+                  </td>
 
-<td className="p-4">
-  <DeleteApplicationButton
-    id={application.id}
-  />
-</td>
+                  <td className="p-4">
+                    <DeleteApplicationButton id={application.id} />
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -194,11 +197,9 @@ function DashboardCard({
   value: string | number;
 }) {
   return (
-    <div className="rounded-3xl bg-white p-6 shadow-sm">
+    <div className="rounded-3xl bg-white p-5 shadow-sm">
       <p className="text-sm text-[#666]">{label}</p>
-      <p className="mt-2 text-3xl font-bold text-[#3f6f55]">
-        {value}
-      </p>
+      <p className="mt-2 text-2xl font-bold text-[#3f6f55]">{value}</p>
     </div>
   );
 }
