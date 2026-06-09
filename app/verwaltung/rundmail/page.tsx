@@ -15,12 +15,12 @@ export default function RundmailPage() {
     setLoading(true);
     setStatusMessage("");
 
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
     const response = await fetch("/api/rundmail/send", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ subject, message }),
+      body: formData,
     });
 
     const result = await response.json();
@@ -35,6 +35,7 @@ export default function RundmailPage() {
     setStatusMessage(`Rundmail wurde an ${result.count} Mitglieder versendet.`);
     setSubject("");
     setMessage("");
+    form.reset();
   }
 
   return (
@@ -60,7 +61,7 @@ export default function RundmailPage() {
           </h1>
 
           <p className="mt-4 text-[#666]">
-            Senden Sie eine Nachricht an alle aktiven Mitglieder des Fördervereins.
+            Sende eine Nachricht an alle aktiven Mitglieder des Fördervereins.
           </p>
 
           <form onSubmit={handleSend} className="mt-8 space-y-6">
@@ -69,6 +70,7 @@ export default function RundmailPage() {
                 Betreff
               </label>
               <input
+                name="subject"
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
                 className="w-full rounded-2xl border border-[#d8cfc3] px-4 py-3 text-black"
@@ -81,11 +83,24 @@ export default function RundmailPage() {
                 Nachricht
               </label>
               <textarea
+                name="message"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 rows={10}
                 className="w-full rounded-2xl border border-[#d8cfc3] px-4 py-3 text-black"
                 required
+              />
+            </div>
+
+            <div>
+              <label className="mb-2 block font-semibold text-[#3f6f55]">
+                PDF-Anhang optional
+              </label>
+              <input
+                name="attachment"
+                type="file"
+                accept=".pdf"
+                className="w-full rounded-2xl border border-[#d8cfc3] px-4 py-3 text-black"
               />
             </div>
 

@@ -5,13 +5,35 @@ import { emailLayout } from "../../../../lib/emailTemplates";
 
 export async function POST(request: Request) {
   try {
-    const { subject, message } = await request.json();
+    const formData = await request.formData();
+
+    const subject = String(formData.get("subject") || "");
+    const message = String(formData.get("message") || "");
+    const attachment = formData.get("attachment") as File | null;
 
     if (!subject || !message) {
       return NextResponse.json(
         { message: "Betreff und Nachricht sind erforderlich." },
         { status: 400 }
       );
+    }
+
+    const attachments = [];
+
+    if (attachment && attachment.size > 0) {
+      if (attachment.type !== "application/pdf") {
+        return NextResponse.json(
+          { message: "Es können nur PDF-Dateien angehängt werden." },
+          { status: 400 }
+        );
+      }
+
+      const arrayBuffer = await attachment.arrayBuffer();
+
+      attachments.push({
+        filename: attachment.name,
+        content: Buffer.from(arrayBuffer),
+      });
     }
 
     const members = await prisma.member.findMany({
@@ -35,13 +57,9 @@ export async function POST(request: Request) {
             intro: `Hallo ${member.firstName},`,
             children: `
               <p>${message.replace(/\n/g, "<br />")}</p>
-
-              <p>
-                Viele Grüße<br />
-                Förderverein Kita am BiZ e. V.
-              </p>
             `,
           }),
+          attachments,
         });
 
         sentCount++;

@@ -4,10 +4,15 @@ export async function sendMail({
   to,
   subject,
   html,
+  attachments,
 }: {
   to: string;
   subject: string;
   html: string;
+  attachments?: {
+    filename: string;
+    content: Buffer;
+  }[];
 }) {
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
@@ -24,5 +29,6 @@ export async function sendMail({
     to,
     subject,
     html,
+    attachments,
   });
 }
