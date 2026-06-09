@@ -30,6 +30,16 @@ export function emailLayout({
 
         <div style="font-size:16px; line-height:1.7; color:#555;">
           ${children}
+             <div style="margin-top:32px;">
+                <p>Beste Grüße</p>
+
+                <p style="line-height:1.7;">
+                  <strong>Der Vorstand des Fördervereins Kita am BiZ e. V.</strong><br />
+                  Matthias Dengler<br />
+                  Mario Mai<br />
+                  Johanna Ehses
+                </p>
+              </div>
         </div>
 
         ${
