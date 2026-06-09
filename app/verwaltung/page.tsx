@@ -88,6 +88,13 @@ export default async function VerwaltungPage() {
               Dokumente
             </Link>
 
+            <Link
+              href="/verwaltung/rundmail"
+              className="rounded-full bg-[#d4a84f] px-5 py-3 font-semibold text-white transition hover:bg-[#c3973f]"
+            >
+              Rundmail
+            </Link>
+
             <LogoutButton />
           </div>
         </div>
