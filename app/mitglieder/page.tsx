@@ -29,6 +29,15 @@ export default async function MitgliederBereichPage() {
     redirect("/mitglieder/passwort-aendern");
   }
 
+  const documents = await prisma.document.findMany({
+    where: {
+      visible: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
   return (
     <main className="min-h-screen bg-[#f8f5ee] px-6 py-12 text-[#2f2f2f]">
       <div className="mx-auto max-w-6xl">
@@ -118,14 +127,38 @@ export default async function MitgliederBereichPage() {
               Hier findest du wichtige Dokumente des Fördervereins.
             </p>
 
-            <a
-              href="/dokumente/satzung.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex rounded-full bg-[#3f6f55] px-6 py-3 font-semibold text-white transition hover:bg-[#335945]"
-            >
-              Satzung öffnen
-            </a>
+            <div className="grid gap-4">
+              {documents.map((document) => (
+                <a
+                  key={document.id}
+                  href={document.fileUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex flex-col gap-3 rounded-3xl bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md sm:flex-row sm:items-center sm:justify-between"
+                >
+                  <div>
+                    <p className="font-semibold text-[#2f2f2f]">
+                      {document.title}
+                    </p>
+
+                    <p className="mt-1 text-sm text-[#666]">
+                      {document.category} ·{" "}
+                      {new Date(document.createdAt).toLocaleDateString("de-DE")}
+                    </p>
+                  </div>
+
+                  <span className="inline-flex rounded-full bg-[#3f6f55] px-5 py-2 text-sm font-semibold text-white">
+                    Öffnen
+                  </span>
+                </a>
+              ))}
+
+              {documents.length === 0 && (
+                <p className="rounded-2xl bg-white p-5 text-[#666]">
+                  Aktuell sind keine Dokumente verfügbar.
+                </p>
+              )}
+            </div>
           </div>
         </section>
       </div>
