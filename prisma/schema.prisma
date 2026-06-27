@@ -103,3 +103,13 @@ model Document {
 
   visible   Boolean  @default(true)
 }
+
+model SurveyResponse {
+  id             String   @id @default(cuid())
+  language       String
+  name           String?
+  rating         Int
+  answerOne      String
+  answerTwo      String
+  createdAt      DateTime @default(now())
+}
