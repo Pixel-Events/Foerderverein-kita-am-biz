@@ -89,6 +89,13 @@ export default async function VerwaltungPage() {
             </Link>
 
             <Link
+              href="/verwaltung/umfragen"
+              className="rounded-full bg-[#3f6f5a] px-5 py-3 font-semibold text-white transition hover:bg-[#345f4d]"
+            >
+              Umfrage-Auswertung
+            </Link>
+
+            <Link
               href="/verwaltung/rundmail"
               className="rounded-full bg-[#d4a84f] px-5 py-3 font-semibold text-white transition hover:bg-[#c3973f]"
             >
