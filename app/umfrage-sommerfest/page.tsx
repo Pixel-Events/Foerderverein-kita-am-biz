@@ -306,22 +306,20 @@ export default function UmfragePage() {
                         {t.rating} <span className="text-red-600">*</span>
                     </label>
 
-                    <div className="rounded-2xl border border-[#dacbbb] bg-[#fffdf9] px-5 py-4">
-                        <div className="flex flex-wrap gap-2">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                            <button
-                            key={star}
-                            type="button"
-                            onClick={() => setRating(star)}
-                            className={`text-5xl leading-none transition hover:scale-110 ${
-                                star <= rating ? "text-yellow-500" : "text-[#d8d0c4]"
-                            }`}
-                            aria-label={`${star} Sterne`}
-                            >
-                            ★
-                            </button>
-                        ))}
-                        </div>
+                    <div className="flex flex-nowrap items-center justify-between gap-1 sm:justify-start sm:gap-2">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          type="button"
+                          onClick={() => setRating(star)}
+                          className={`text-4xl leading-none transition hover:scale-110 sm:text-5xl ${
+                            star <= rating ? "text-yellow-500" : "text-[#d8d0c4]"
+                          }`}
+                          aria-label={`${star} Sterne`}
+                        >
+                          ★
+                        </button>
+                      ))}
                     </div>
                     </div>
 
