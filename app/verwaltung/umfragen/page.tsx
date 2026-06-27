@@ -70,9 +70,9 @@ function buildFilterLink({
 export default async function UmfragenAuswertungPage({
   searchParams,
 }: {
-  searchParams: Promise<SearchParams>;
+  searchParams: SearchParams;
 }) {
-  const params = await searchParams;
+  const params = searchParams;
 
   const selectedLanguage = params.sprache || "alle";
   const selectedSort = params.sortierung || "neueste";
