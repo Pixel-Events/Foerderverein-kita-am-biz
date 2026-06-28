@@ -761,7 +761,6 @@ async function handleMemberLogin(e: React.FormEvent<HTMLFormElement>) {
               <ul className="space-y-3 text-[#d8e3d5]">
                 <li>Von-Steuben-Straße 31</li>
                 <li>67549 Worms</li>
-                <li>0172 2686580</li>
                 <li>info@foerderverein-kita-am-biz.de</li>
               </ul>
             </div>
