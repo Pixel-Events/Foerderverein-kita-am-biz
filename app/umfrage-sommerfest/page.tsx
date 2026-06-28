@@ -404,7 +404,7 @@ export default function UmfragePage() {
             <div className="flex flex-col gap-3">
               <button
                 type="button"
-                onClick={() => setShowThanksPopup(false)}
+                onClick={() => router.push("/")}
                 className="rounded-full bg-[#3f6f5a] px-5 py-3 font-bold text-white transition hover:bg-[#345f4d]"
               >
                 {t.yesMember}
