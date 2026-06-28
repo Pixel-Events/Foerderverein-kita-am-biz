@@ -160,12 +160,13 @@ const languages: {
   key: Language;
   label: string;
   flag: string;
+  hint: string;
 }[] = [
-  { key: "de", label: "Deutsch", flag: "🇩🇪" },
-  { key: "en", label: "English", flag: "🇬🇧" },
-  { key: "tr", label: "Türkçe", flag: "🇹🇷" },
-  { key: "ar", label: "العربية", flag: "🇸🇦" },
-  { key: "uk", label: "Українська", flag: "🇺🇦" },
+  { key: "de", label: "Deutsch", flag: "DE", hint: "Sprache auswählen" },
+  { key: "en", label: "English", flag: "GB", hint: "Select language" },
+  { key: "tr", label: "Türkçe", flag: "TR", hint: "Dil seç" },
+  { key: "ar", label: "العربية", flag: "SA", hint: "اختيار اللغة" },
+  { key: "uk", label: "Українська", flag: "UA", hint: "Оберіть мову" },
 ];
 
 export default function UmfragePage() {
@@ -261,7 +262,7 @@ export default function UmfragePage() {
                         {item.label}
                       </span>
                       <span className="mt-1 block text-sm text-[#6f6a61]">
-                        {t.selectLanguage}
+                        {item.hint}
                       </span>
                     </span>
                   </button>
