@@ -1,11 +1,12 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 type Language = "de" | "en" | "tr" | "ar" | "uk";
 
-const headingFont = {
+const headingFont: CSSProperties = {
   fontFamily: "var(--font-baloo)",
 };
 
@@ -17,13 +18,12 @@ const translations = {
     changeLanguage: "Sprache ändern",
     name: "Name (optional)",
     rating: "Wie war dein Gesamteindruck?",
-    answerOne:
-      "Was können wir verbessern, damit dein Gesamteindruck noch besser wird?",
-    answerTwo: "Was hat dir besonders gut gefallen?",
+    answerOne: "Was hat dir besonders gut gefallen?",
+    answerTwo:
+      "Was können wir in Zukunft ändern, damit dein Gesamteindruck sich verbessert?",
     submit: "Bewertung absenden",
     required: "Bitte fülle alle Pflichtfelder aus.",
     requiredHint: "Die mit * markierten Felder sind Pflichtfelder.",
-    selectLanguage: "Sprache auswählen",
     thanksTitle: "Vielen Dank!",
     thanksText: "Vielen Dank für deine Teilnahme an der Umfrage.",
     memberQuestion: "Bist du schon Mitglied im Förderverein?",
@@ -46,13 +46,12 @@ const translations = {
     changeLanguage: "Change language",
     name: "Name (optional)",
     rating: "What was your overall impression?",
-    answerOne:
-      "What can we improve to make your overall impression even better?",
-    answerTwo: "What did you particularly like?",
+    answerOne: "What did you particularly like?",
+    answerTwo:
+      "What can we change in the future to improve your overall impression?",
     submit: "Submit review",
     required: "Please fill in all required fields.",
     requiredHint: "Fields marked with * are required.",
-    selectLanguage: "Select language",
     thanksTitle: "Thank you!",
     thanksText: "Thank you for taking part in the survey.",
     memberQuestion: "Are you already a member of the support association?",
@@ -75,13 +74,12 @@ const translations = {
     changeLanguage: "Dili değiştir",
     name: "İsim (isteğe bağlı)",
     rating: "Genel izleniminiz nasıldı?",
-    answerOne:
-      "Genel izleniminizin daha da iyi olması için neyi geliştirebiliriz?",
-    answerTwo: "Özellikle neyi beğendiniz?",
+    answerOne: "Özellikle neyi beğendiniz?",
+    answerTwo:
+      "Genel izleniminizin iyileşmesi için gelecekte neyi değiştirebiliriz?",
     submit: "Değerlendirmeyi gönder",
     required: "Lütfen tüm zorunlu alanları doldurun.",
     requiredHint: "* ile işaretli alanların doldurulması zorunludur.",
-    selectLanguage: "Dil seç",
     thanksTitle: "Teşekkür ederiz!",
     thanksText: "Ankete katıldığınız için teşekkür ederiz.",
     memberQuestion: "Destek derneğine zaten üye misiniz?",
@@ -104,12 +102,11 @@ const translations = {
     changeLanguage: "تغيير اللغة",
     name: "الاسم (اختياري)",
     rating: "كيف كان انطباعكم العام؟",
-    answerOne: "ما الذي يمكننا تحسينه ليصبح انطباعكم العام أفضل؟",
-    answerTwo: "ما الذي أعجبكم بشكل خاص؟",
+    answerOne: "ما الذي أعجبكم بشكل خاص؟",
+    answerTwo: "ما الذي يمكننا تغييره في المستقبل لتحسين انطباعكم العام؟",
     submit: "إرسال التقييم",
     required: "يرجى ملء جميع الحقول المطلوبة.",
     requiredHint: "الحقول المميزة بعلامة * مطلوبة.",
-    selectLanguage: "اختيار اللغة",
     thanksTitle: "شكراً جزيلاً!",
     thanksText: "شكراً لمشاركتكم في الاستبيان.",
     memberQuestion: "هل أنتم بالفعل أعضاء في جمعية الدعم؟",
@@ -132,13 +129,12 @@ const translations = {
     changeLanguage: "Змінити мову",
     name: "Ім’я (необов’язково)",
     rating: "Яким було ваше загальне враження?",
-    answerOne:
-      "Що ми можемо покращити, щоб ваше загальне враження стало ще кращим?",
-    answerTwo: "Що вам особливо сподобалося?",
+    answerOne: "Що вам особливо сподобалося?",
+    answerTwo:
+      "Що ми можемо змінити в майбутньому, щоб покращити ваше загальне враження?",
     submit: "Надіслати оцінку",
     required: "Будь ласка, заповніть усі обов’язкові поля.",
     requiredHint: "Поля, позначені *, є обов’язковими.",
-    selectLanguage: "Оберіть мову",
     thanksTitle: "Дякуємо!",
     thanksText: "Дякуємо за участь в опитуванні.",
     memberQuestion: "Ви вже є членом Förderverein?",
@@ -196,7 +192,8 @@ export default function UmfragePage() {
 
     setIsSubmitting(true);
 
-    const res = await fetch("/api/umfrage", {
+    try {
+      const res = await fetch("/api/umfrage", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -221,6 +218,11 @@ export default function UmfragePage() {
       }
 
       setShowThanksPopup(true);
+    } catch (error) {
+      console.error("Fehler beim Absenden der Umfrage:", error);
+      setIsSubmitting(false);
+      setError("Die Bewertung konnte nicht gespeichert werden.");
+    }
   }
 
   return (
@@ -250,7 +252,7 @@ export default function UmfragePage() {
                     onClick={() => setLanguage(item.key)}
                     className="group flex items-center gap-5 rounded-3xl border border-[#dacbbb] bg-[#fffdf9] p-5 text-left text-lg transition hover:-translate-y-1 hover:border-[#3f6f5a] hover:bg-[#f8f5ee] hover:shadow-md"
                   >
-                    <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#f8f5ee] text-4xl transition group-hover:scale-105">
+                    <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#f8f5ee] text-2xl font-bold text-[#222] transition group-hover:scale-105">
                       {item.flag}
                     </span>
 
@@ -261,6 +263,7 @@ export default function UmfragePage() {
                       >
                         {item.label}
                       </span>
+
                       <span className="mt-1 block text-sm text-[#6f6a61]">
                         {item.hint}
                       </span>
@@ -306,10 +309,11 @@ export default function UmfragePage() {
                 </div>
 
                 <div>
-                    <label className="mb-2 block text-base font-semibold text-[#333]">
-                        {t.rating} <span className="text-red-600">*</span>
-                    </label>
+                  <label className="mb-2 block text-base font-semibold text-[#333]">
+                    {t.rating} <span className="text-red-600">*</span>
+                  </label>
 
+                  <div className="rounded-2xl border border-[#dacbbb] bg-[#fffdf9] px-3 py-4 sm:px-5">
                     <div className="flex flex-nowrap items-center justify-between gap-1 sm:justify-start sm:gap-2">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <button
@@ -317,7 +321,9 @@ export default function UmfragePage() {
                           type="button"
                           onClick={() => setRating(star)}
                           className={`text-4xl leading-none transition hover:scale-110 sm:text-5xl ${
-                            star <= rating ? "text-yellow-500" : "text-[#d8d0c4]"
+                            star <= rating
+                              ? "text-yellow-500"
+                              : "text-[#d8d0c4]"
                           }`}
                           aria-label={`${star} Sterne`}
                         >
@@ -325,7 +331,8 @@ export default function UmfragePage() {
                         </button>
                       ))}
                     </div>
-                    </div>
+                  </div>
+                </div>
 
                 <div>
                   <label className="mb-2 block text-base font-semibold text-[#333]">
@@ -452,7 +459,7 @@ export default function UmfragePage() {
             <div className="flex flex-col gap-3">
               <button
                 type="button"
-                onClick={() => router.push("/#beitritt")}
+                onClick={() => router.push("/mitglied")}
                 className="rounded-full bg-[#3f6f5a] px-5 py-3 font-bold text-white transition hover:bg-[#345f4d]"
               >
                 {t.becomeMember}
