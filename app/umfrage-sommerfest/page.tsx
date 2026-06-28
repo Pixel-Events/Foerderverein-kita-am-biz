@@ -27,7 +27,7 @@ const translations = {
     thanksTitle: "Vielen Dank!",
     thanksText: "Vielen Dank für deine Teilnahme an der Umfrage.",
     memberQuestion: "Bist du schon Mitglied im Förderverein?",
-    yesMember: "Ja, bin bereits Mitglied",
+    yesMember: "Ja, ich bin bereits Mitglied",
     noMember: "Nein",
     benefitsTitle: "Mitglied werden und die Kita unterstützen",
     benefitsText:
@@ -158,11 +158,11 @@ const languages: {
   flag: string;
   hint: string;
 }[] = [
-  { key: "de", label: "Deutsch", flag: "DE", hint: "Sprache auswählen" },
-  { key: "en", label: "English", flag: "GB", hint: "Select language" },
-  { key: "tr", label: "Türkçe", flag: "TR", hint: "Dil seç" },
-  { key: "ar", label: "العربية", flag: "SA", hint: "اختيار اللغة" },
-  { key: "uk", label: "Українська", flag: "UA", hint: "Оберіть мову" },
+  { key: "de", label: "Deutsch", flag: "🇩🇪", hint: "Sprache auswählen" },
+  { key: "en", label: "English", flag: "🇬🇧", hint: "Select language" },
+  { key: "tr", label: "Türkçe", flag: "🇹🇷", hint: "Dil seç" },
+  { key: "ar", label: "العربية", flag: "🇸🇦", hint: "اختيار اللغة" },
+  { key: "uk", label: "Українська", flag: "🇺🇦", hint: "Оберіть мову" },
 ];
 
 export default function UmfragePage() {
@@ -252,7 +252,7 @@ export default function UmfragePage() {
                     onClick={() => setLanguage(item.key)}
                     className="group flex items-center gap-5 rounded-3xl border border-[#dacbbb] bg-[#fffdf9] p-5 text-left text-lg transition hover:-translate-y-1 hover:border-[#3f6f5a] hover:bg-[#f8f5ee] hover:shadow-md"
                   >
-                    <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#f8f5ee] text-2xl font-bold text-[#222] transition group-hover:scale-105">
+                    <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#f8f5ee] text-4xl transition group-hover:scale-105">
                       {item.flag}
                     </span>
 
@@ -459,7 +459,7 @@ export default function UmfragePage() {
             <div className="flex flex-col gap-3">
               <button
                 type="button"
-                onClick={() => router.push("/mitglied")}
+                onClick={() => router.push("#beitritt")}
                 className="rounded-full bg-[#3f6f5a] px-5 py-3 font-bold text-white transition hover:bg-[#345f4d]"
               >
                 {t.becomeMember}
