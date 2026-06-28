@@ -111,7 +111,5 @@ model SurveyResponse {
   rating      Int
   answerOne   String
   answerTwo   String
-  answerOneDe String?
-  answerTwoDe String?
   createdAt   DateTime @default(now())
 }

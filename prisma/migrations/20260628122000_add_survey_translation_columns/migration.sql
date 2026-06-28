@@ -1,2 +1,0 @@
-ALTER TABLE "SurveyResponse" ADD COLUMN IF NOT EXISTS "answerOneDe" TEXT;
-ALTER TABLE "SurveyResponse" ADD COLUMN IF NOT EXISTS "answerTwoDe" TEXT;
