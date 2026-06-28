@@ -754,7 +754,7 @@ async function handleMemberLogin(e: React.FormEvent<HTMLFormElement>) {
 
             {/* Kontakt */}
             <div>
-              <h4 className="mb-4 text-lg font-semibold">
+              <h4 id="kontakt" className="mb-4 text-lg font-semibold">
                 Kontakt
               </h4>
 
