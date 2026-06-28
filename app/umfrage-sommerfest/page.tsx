@@ -196,27 +196,30 @@ export default function UmfragePage() {
     setIsSubmitting(true);
 
     const res = await fetch("/api/umfrage", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        language,
-        name,
-        rating,
-        answerOne,
-        answerTwo,
-      }),
-    });
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          language,
+          name,
+          rating: Number(rating),
+          answerOne: answerOne.trim(),
+          answerTwo: answerTwo.trim(),
+        }),
+      });
 
-    setIsSubmitting(false);
+      const data = await res.json();
 
-    if (!res.ok) {
-      setError(t.required);
-      return;
-    }
+      setIsSubmitting(false);
 
-    setShowThanksPopup(true);
+      if (!res.ok) {
+        console.error("Fehler beim Absenden der Umfrage:", data);
+        setError(data.error || "Die Bewertung konnte nicht gespeichert werden.");
+        return;
+      }
+
+      setShowThanksPopup(true);
   }
 
   return (

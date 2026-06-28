@@ -5,11 +5,23 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    const { language, name, rating, answerOne, answerTwo } = body;
+    const language = String(body.language || "").trim();
+    const name = String(body.name || "").trim();
+    const rating = Number(body.rating);
+    const answerOne = String(body.answerOne || "").trim();
+    const answerTwo = String(body.answerTwo || "").trim();
 
     if (!language || !rating || !answerOne || !answerTwo) {
       return NextResponse.json(
-        { error: "Bitte alle Pflichtfelder ausfüllen." },
+        {
+          error: "Bitte alle Pflichtfelder ausfüllen.",
+          debug: {
+            language,
+            rating,
+            answerOneVorhanden: Boolean(answerOne),
+            answerTwoVorhanden: Boolean(answerTwo),
+          },
+        },
         { status: 400 }
       );
     }
