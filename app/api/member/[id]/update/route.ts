@@ -25,6 +25,11 @@ export async function PATCH(
       );
     }
 
+    const joinedAt =
+      data.joinedAt && String(data.joinedAt).trim() !== ""
+        ? new Date(data.joinedAt)
+        : undefined;
+
     const member = await prisma.member.update({
       where: { id },
       data: {
@@ -41,6 +46,7 @@ export async function PATCH(
         iban: data.iban || null,
         mandateReference: data.mandateReference || null,
         status: data.status || "Aktiv",
+        joinedAt,
       },
     });
 

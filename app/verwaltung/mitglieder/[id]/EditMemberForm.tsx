@@ -3,6 +3,16 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+function formatDateForInput(date?: string | Date | null) {
+  if (!date) return "";
+
+  const d = new Date(date);
+
+  if (Number.isNaN(d.getTime())) return "";
+
+  return d.toISOString().split("T")[0];
+}
+
 export default function EditMemberForm({ member }: { member: any }) {
   const router = useRouter();
   const [editing, setEditing] = useState(false);
@@ -28,6 +38,7 @@ export default function EditMemberForm({ member }: { member: any }) {
       iban: formData.get("iban"),
       mandateReference: formData.get("mandateReference"),
       status: formData.get("status"),
+      joinedAt: formData.get("joinedAt"),
     };
 
     const response = await fetch(`/api/member/${member.id}/update`, {
@@ -48,7 +59,7 @@ export default function EditMemberForm({ member }: { member: any }) {
     setSuccessMessage("Mitglied wurde erfolgreich gespeichert.");
     setEditing(false);
     router.refresh();
-    }
+  }
 
   if (!editing) {
     return (
@@ -70,89 +81,160 @@ export default function EditMemberForm({ member }: { member: any }) {
       )}
 
       <form onSubmit={handleSave} className="rounded-3xl bg-[#f8f5ee] p-6">
-  <h2
-    style={{ fontFamily: "var(--font-baloo)" }}
-    className="mb-6 text-3xl font-bold text-[#3f6f55]"
-  >
-    Mitglied bearbeiten
-  </h2>
+        <h2
+          style={{ fontFamily: "var(--font-baloo)" }}
+          className="mb-6 text-3xl font-bold text-[#3f6f55]"
+        >
+          Mitglied bearbeiten
+        </h2>
 
-  <div className="grid gap-5 md:grid-cols-2">
-    <Field label="Vorname">
-      <input name="firstName" defaultValue={member.firstName} className="input-field" required />
-    </Field>
+        <div className="grid gap-5 md:grid-cols-2">
+          <Field label="Vorname">
+            <input
+              name="firstName"
+              defaultValue={member.firstName}
+              className="input-field"
+              required
+            />
+          </Field>
 
-    <Field label="Nachname">
-      <input name="lastName" defaultValue={member.lastName} className="input-field" required />
-    </Field>
+          <Field label="Nachname">
+            <input
+              name="lastName"
+              defaultValue={member.lastName}
+              className="input-field"
+              required
+            />
+          </Field>
 
-    <Field label="E-Mail">
-      <input name="email" type="email" defaultValue={member.email} className="input-field" required />
-    </Field>
+          <Field label="E-Mail">
+            <input
+              name="email"
+              type="email"
+              defaultValue={member.email}
+              className="input-field"
+              required
+            />
+          </Field>
 
-    <Field label="Telefon">
-      <input name="phone" defaultValue={member.phone || ""} className="input-field" />
-    </Field>
+          <Field label="Telefon">
+            <input
+              name="phone"
+              defaultValue={member.phone || ""}
+              className="input-field"
+            />
+          </Field>
 
-    <Field label="Straße und Hausnummer" full>
-      <input name="street" defaultValue={member.street || ""} className="input-field" />
-    </Field>
+          <Field label="Straße und Hausnummer" full>
+            <input
+              name="street"
+              defaultValue={member.street || ""}
+              className="input-field"
+            />
+          </Field>
 
-    <Field label="PLZ">
-      <input name="zip" defaultValue={member.zip || ""} className="input-field" />
-    </Field>
+          <Field label="PLZ">
+            <input
+              name="zip"
+              defaultValue={member.zip || ""}
+              className="input-field"
+            />
+          </Field>
 
-    <Field label="Ort">
-      <input name="city" defaultValue={member.city || ""} className="input-field" />
-    </Field>
+          <Field label="Ort">
+            <input
+              name="city"
+              defaultValue={member.city || ""}
+              className="input-field"
+            />
+          </Field>
 
-    <Field label="Jahresbeitrag">
-      <input name="membershipFee" type="number" min="24" defaultValue={member.membershipFee} className="input-field" required />
-    </Field>
+          <Field label="Eintrittsdatum">
+            <input
+              name="joinedAt"
+              type="date"
+              defaultValue={formatDateForInput(member.joinedAt)}
+              className="input-field"
+            />
+          </Field>
 
-    <Field label="Zahlungsart">
-      <select name="paymentMethod" defaultValue={member.paymentMethod} className="input-field">
-        <option value="sepa">SEPA-Lastschrift</option>
-        <option value="transfer">Überweisung</option>
-      </select>
-    </Field>
+          <Field label="Jahresbeitrag">
+            <input
+              name="membershipFee"
+              type="number"
+              min="24"
+              defaultValue={member.membershipFee}
+              className="input-field"
+              required
+            />
+          </Field>
 
-    <Field label="Kontoinhaber">
-      <input name="accountHolder" defaultValue={member.accountHolder || ""} className="input-field" />
-    </Field>
+          <Field label="Zahlungsart">
+            <select
+              name="paymentMethod"
+              defaultValue={member.paymentMethod}
+              className="input-field"
+            >
+              <option value="sepa">SEPA-Lastschrift</option>
+              <option value="transfer">Überweisung</option>
+            </select>
+          </Field>
 
-    <Field label="IBAN">
-      <input name="iban" defaultValue={member.iban || ""} className="input-field" />
-    </Field>
+          <Field label="Kontoinhaber">
+            <input
+              name="accountHolder"
+              defaultValue={member.accountHolder || ""}
+              className="input-field"
+            />
+          </Field>
 
-    <Field label="Mandatsreferenz">
-  <input
-    name="mandateReference"
-    defaultValue={member.mandateReference || ""}
-    className="input-field"
-  />
-</Field>
+          <Field label="IBAN">
+            <input
+              name="iban"
+              defaultValue={member.iban || ""}
+              className="input-field"
+            />
+          </Field>
 
-    <Field label="Status">
-      <select name="status" defaultValue={member.status} className="input-field">
-        <option value="Aktiv">Aktiv</option>
-        <option value="Ruhend">Ruhend</option>
-        <option value="Ausgetreten">Ausgetreten</option>
-      </select>
-    </Field>
-  </div>
+          <Field label="Mandatsreferenz">
+            <input
+              name="mandateReference"
+              defaultValue={member.mandateReference || ""}
+              className="input-field"
+            />
+          </Field>
 
-  <div className="mt-6 flex flex-wrap gap-4">
-    <button type="submit" className="rounded-full bg-[#3f6f55] px-6 py-3 font-semibold text-white">
-      Speichern
-    </button>
+          <Field label="Status">
+            <select
+              name="status"
+              defaultValue={member.status}
+              className="input-field"
+            >
+              <option value="Aktiv">Aktiv</option>
+              <option value="Ruhend">Ruhend</option>
+              <option value="Ausgetreten">Ausgetreten</option>
+            </select>
+          </Field>
+        </div>
 
-    <button type="button" onClick={() => setEditing(false)} className="rounded-full bg-white px-6 py-3 font-semibold text-[#3f6f55]">
-      Abbrechen
-    </button>
-  </div>
-</form>
-</div>
+        <div className="mt-6 flex flex-wrap gap-4">
+          <button
+            type="submit"
+            className="rounded-full bg-[#3f6f55] px-6 py-3 font-semibold text-white"
+          >
+            Speichern
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setEditing(false)}
+            className="rounded-full bg-white px-6 py-3 font-semibold text-[#3f6f55]"
+          >
+            Abbrechen
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }
 
