@@ -67,6 +67,28 @@ function buildFilterLink({
   return query ? `/verwaltung/umfragen?${query}` : "/verwaltung/umfragen";
 }
 
+function buildExportLink({
+  sprache,
+  sortierung,
+}: {
+  sprache?: string;
+  sortierung?: string;
+}) {
+  const params = new URLSearchParams();
+
+  if (sprache && sprache !== "alle") {
+    params.set("sprache", sprache);
+  }
+
+  if (sortierung && sortierung !== "neueste") {
+    params.set("sortierung", sortierung);
+  }
+
+  const query = params.toString();
+
+  return query ? `/api/umfrage/export?${query}` : "/api/umfrage/export";
+}
+
 export default async function UmfragenAuswertungPage({
   searchParams,
 }: {
@@ -144,12 +166,24 @@ export default async function UmfragenAuswertungPage({
             </p>
           </div>
 
-          <Link
-            href="/verwaltung"
-            className="rounded-full border border-[#dacbbb] bg-white px-5 py-3 font-semibold text-[#3f6f5a] transition hover:bg-[#f8f5ee]"
-          >
-            Zurück zur Verwaltung
-          </Link>
+          <div className="flex flex-wrap gap-3">
+            <a
+              href={buildExportLink({
+                sprache: selectedLanguage,
+                sortierung: selectedSort,
+              })}
+              className="rounded-full bg-[#3f6f5a] px-5 py-3 font-semibold text-white transition hover:bg-[#345f4d]"
+            >
+              CSV herunterladen
+            </a>
+
+            <Link
+              href="/verwaltung"
+              className="rounded-full border border-[#dacbbb] bg-white px-5 py-3 font-semibold text-[#3f6f5a] transition hover:bg-[#f8f5ee]"
+            >
+              Zurück zur Verwaltung
+            </Link>
+          </div>
         </div>
 
         <section className="mb-8 grid gap-5 md:grid-cols-4">
@@ -277,7 +311,7 @@ export default async function UmfragenAuswertungPage({
                 <div className="grid gap-5 md:grid-cols-2">
                   <div className="rounded-2xl border border-[#eadfce] bg-[#fffdf9] p-5">
                     <h2 className="mb-3 font-semibold text-[#3f6f5a]">
-                      Was können wir verbessern?
+                      Was hat besonders gut gefallen?
                     </h2>
 
                     <p className="whitespace-pre-wrap leading-7 text-[#333]">
@@ -287,7 +321,8 @@ export default async function UmfragenAuswertungPage({
 
                   <div className="rounded-2xl border border-[#eadfce] bg-[#fffdf9] p-5">
                     <h2 className="mb-3 font-semibold text-[#3f6f5a]">
-                      Was hat besonders gut gefallen?
+                      Was können wir in Zukunft ändern, damit dein Gesamteindruck
+                      sich verbessert?
                     </h2>
 
                     <p className="whitespace-pre-wrap leading-7 text-[#333]">
