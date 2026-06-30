@@ -34,7 +34,7 @@ export function emailLayout({
                 <p>Beste Grüße</p>
 
                 <p style="line-height:1.7;">
-                  <strong>Der Vorstand des Fördervereins Kita am BiZ e. V.</strong>
+                  <strong>Der Vorstand des Fördervereins Kita am BIZ e. V.</strong>
                 </p>
               </div>
         </div>
