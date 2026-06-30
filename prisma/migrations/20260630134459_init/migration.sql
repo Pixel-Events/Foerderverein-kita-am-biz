@@ -55,6 +55,8 @@ CREATE TABLE "Member" (
     "mustChangePassword" BOOLEAN NOT NULL DEFAULT true,
     "resetToken" TEXT,
     "resetTokenExpiry" TIMESTAMP(3),
+    "contributionPaidYear" INTEGER,
+    "contributionPaidAt" TIMESTAMP(3),
 
     CONSTRAINT "Member_pkey" PRIMARY KEY ("id")
 );
@@ -94,6 +96,8 @@ CREATE TABLE "SurveyResponse" (
     "rating" INTEGER NOT NULL,
     "answerOne" TEXT NOT NULL,
     "answerTwo" TEXT NOT NULL,
+    "answerOneDe" TEXT,
+    "answerTwoDe" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "SurveyResponse_pkey" PRIMARY KEY ("id")

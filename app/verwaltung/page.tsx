@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "../../lib/prisma";
 import LogoutButton from "./LogoutButton";
 import DeleteApplicationButton from "./DeleteApplicationButton";
+import ContributionButton from "./ContributionButton";
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +18,12 @@ export default async function VerwaltungPage() {
     },
   });
 
-  const members = await prisma.member.findMany();
+  const members = await prisma.member.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
   const donations = await prisma.donation.findMany();
   const documents = await prisma.document.findMany();
 
@@ -48,7 +54,8 @@ export default async function VerwaltungPage() {
             </h1>
 
             <p className="mt-2 text-[#666]">
-              Verwaltung von Anträgen, Mitgliedern, Beiträgen, Spenden und Dokumenten.
+              Verwaltung von Anträgen, Mitgliedern, Beiträgen, Spenden und
+              Dokumenten.
             </p>
           </div>
 
@@ -109,95 +116,224 @@ export default async function VerwaltungPage() {
         <div className="mb-10 grid gap-4 md:grid-cols-4 xl:grid-cols-8">
           <DashboardCard label="Offene Anträge" value={applications.length} />
           <DashboardCard label="Mitglieder gesamt" value={members.length} />
-          <DashboardCard label="Aktive Mitglieder" value={activeMembers.length} />
+          <DashboardCard
+            label="Aktive Mitglieder"
+            value={activeMembers.length}
+          />
           <DashboardCard label="Ruhend" value={restingMembers.length} />
-          <DashboardCard label="Jahresbeiträge" value={`${yearlyFees.toFixed(0)} €`} />
-          <DashboardCard label="Spenden gesamt" value={`${donationSum.toFixed(0)} €`} />
+          <DashboardCard
+            label="Jahresbeiträge"
+            value={`${yearlyFees.toFixed(0)} €`}
+          />
+          <DashboardCard
+            label="Spenden gesamt"
+            value={`${donationSum.toFixed(0)} €`}
+          />
           <DashboardCard label="Offene Quittungen" value={openReceipts} />
           <DashboardCard label="Dokumente" value={documents.length} />
         </div>
 
-        <p className="mb-6 text-[#555]">
-          Hier erscheinen alle eingegangenen Beitrittsanträge.
-        </p>
-
-        <div className="overflow-hidden rounded-3xl bg-white shadow-xl">
-          <table className="w-full border-collapse text-left">
-            <thead className="bg-[#eaf2ea] text-[#3f6f55]">
-              <tr>
-                <th className="p-4">Name</th>
-                <th className="p-4">E-Mail</th>
-                <th className="p-4">Beitrag</th>
-                <th className="p-4">Zahlung</th>
-                <th className="p-4">Status</th>
-                <th className="p-4">Datum</th>
-                <th className="p-4">Details</th>
-                <th className="p-4">Aktion</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {applications.map((application: any) => (
-                <tr
-                  key={application.id}
-                  className="border-t border-[#ece6dc] transition hover:bg-[#f8f5ee]"
-                >
-                  <td className="p-4 font-medium">
-                    <Link
-                      href={`/verwaltung/${application.id}`}
-                      className="text-[#3f6f55] hover:underline"
-                    >
-                      {application.firstName} {application.lastName}
-                    </Link>
-                  </td>
-
-                  <td className="p-4">{application.email}</td>
-
-                  <td className="p-4">
-                    {application.membershipFee.toFixed(2)} €
-                  </td>
-
-                  <td className="p-4">
-                    {application.paymentMethod === "sepa"
-                      ? "SEPA"
-                      : "Überweisung"}
-                  </td>
-
-                  <td className="p-4">
-                    <span className="rounded-full bg-[#fff4cc] px-3 py-1 text-sm font-medium text-[#8a6d00]">
-                      {application.status}
-                    </span>
-                  </td>
-
-                  <td className="p-4">
-                    {new Date(application.createdAt).toLocaleDateString("de-DE")}
-                  </td>
-
-                  <td className="p-4">
-                    <Link
-                      href={`/verwaltung/${application.id}`}
-                      className="rounded-full bg-[#8daa91] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#78987d]"
-                    >
-                      Öffnen
-                    </Link>
-                  </td>
-
-                  <td className="p-4">
-                    <DeleteApplicationButton id={application.id} />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {applications.length === 0 && (
-          <div className="mt-8 rounded-3xl bg-white p-8 text-center shadow-sm">
-            <p className="text-[#666]">
-              Es liegen aktuell keine Beitrittsanträge vor.
-            </p>
+        <section className="mb-14">
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h2 className="text-2xl font-bold text-[#3f6f55]">
+                Beitrittsanträge
+              </h2>
+              <p className="mt-1 text-[#555]">
+                Hier erscheinen alle eingegangenen Beitrittsanträge.
+              </p>
+            </div>
           </div>
-        )}
+
+          <div className="overflow-hidden rounded-3xl bg-white shadow-xl">
+            <table className="w-full border-collapse text-left">
+              <thead className="bg-[#eaf2ea] text-[#3f6f55]">
+                <tr>
+                  <th className="p-4">Name</th>
+                  <th className="p-4">E-Mail</th>
+                  <th className="p-4">Beitrag</th>
+                  <th className="p-4">Zahlung</th>
+                  <th className="p-4">Status</th>
+                  <th className="p-4">Datum</th>
+                  <th className="p-4">Details</th>
+                  <th className="p-4">Aktion</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {applications.map((application: any) => (
+                  <tr
+                    key={application.id}
+                    className="border-t border-[#ece6dc] transition hover:bg-[#f8f5ee]"
+                  >
+                    <td className="p-4 font-medium">
+                      <Link
+                        href={`/verwaltung/${application.id}`}
+                        className="text-[#3f6f55] hover:underline"
+                      >
+                        {application.firstName} {application.lastName}
+                      </Link>
+                    </td>
+
+                    <td className="p-4">{application.email}</td>
+
+                    <td className="p-4">
+                      {application.membershipFee.toFixed(2)} €
+                    </td>
+
+                    <td className="p-4">
+                      {application.paymentMethod === "sepa"
+                        ? "SEPA"
+                        : "Überweisung"}
+                    </td>
+
+                    <td className="p-4">
+                      <span className="rounded-full bg-[#fff4cc] px-3 py-1 text-sm font-medium text-[#8a6d00]">
+                        {application.status}
+                      </span>
+                    </td>
+
+                    <td className="p-4">
+                      {new Date(application.createdAt).toLocaleDateString(
+                        "de-DE"
+                      )}
+                    </td>
+
+                    <td className="p-4">
+                      <Link
+                        href={`/verwaltung/${application.id}`}
+                        className="rounded-full bg-[#8daa91] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#78987d]"
+                      >
+                        Öffnen
+                      </Link>
+                    </td>
+
+                    <td className="p-4">
+                      <DeleteApplicationButton id={application.id} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {applications.length === 0 && (
+            <div className="mt-8 rounded-3xl bg-white p-8 text-center shadow-sm">
+              <p className="text-[#666]">
+                Es liegen aktuell keine Beitrittsanträge vor.
+              </p>
+            </div>
+          )}
+        </section>
+
+        <section>
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h2 className="text-2xl font-bold text-[#3f6f55]">
+                Mitgliederübersicht
+              </h2>
+              <p className="mt-1 text-[#555]">
+                Hier kannst du den Beitragsstatus für das aktuelle Jahr setzen.
+              </p>
+            </div>
+
+            <Link
+              href="/verwaltung/mitglieder"
+              className="rounded-full border border-[#d8cfc3] bg-white px-5 py-3 font-semibold text-[#3f6f55] transition hover:bg-[#f8f5ee]"
+            >
+              Alle Mitglieder öffnen
+            </Link>
+          </div>
+
+          <div className="overflow-hidden rounded-3xl bg-white shadow-xl">
+            <table className="w-full border-collapse text-left">
+              <thead className="bg-[#eaf2ea] text-[#3f6f55]">
+                <tr>
+                  <th className="p-4">Mitgliedsnummer</th>
+                  <th className="p-4">Name</th>
+                  <th className="p-4">E-Mail</th>
+                  <th className="p-4">Jahresbeitrag</th>
+                  <th className="p-4">Beitrag</th>
+                  <th className="p-4">Zahlung</th>
+                  <th className="p-4">Status</th>
+                  <th className="p-4">Eintritt</th>
+                  <th className="p-4">Details</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {members.map((member: any) => (
+                  <tr
+                    key={member.id}
+                    className="border-t border-[#ece6dc] transition hover:bg-[#f8f5ee]"
+                  >
+                    <td className="p-4 font-medium text-[#3f6f55]">
+                      {member.memberNumber}
+                    </td>
+
+                    <td className="p-4 font-medium">
+                      {member.firstName} {member.lastName}
+                    </td>
+
+                    <td className="p-4">{member.email}</td>
+
+                    <td className="p-4">
+                      {member.membershipFee.toFixed(2)} €
+                    </td>
+
+                    <td className="p-4">
+                      <ContributionButton
+                        memberId={member.id}
+                        contributionPaidYear={member.contributionPaidYear}
+                      />
+                    </td>
+
+                    <td className="p-4">
+                      {member.paymentMethod === "sepa"
+                        ? "SEPA"
+                        : "Überweisung"}
+                    </td>
+
+                    <td className="p-4">
+                      <span
+                        className={`rounded-full px-3 py-1 text-sm font-medium ${
+                          member.status === "Aktiv"
+                            ? "bg-[#eaf2ea] text-[#3f6f55]"
+                            : member.status === "Ruhend"
+                              ? "bg-[#fff4cc] text-[#8a6d00]"
+                              : "bg-[#fdeaea] text-[#9b2c2c]"
+                        }`}
+                      >
+                        {member.status}
+                      </span>
+                    </td>
+
+                    <td className="p-4">
+                      {new Date(member.joinedAt).toLocaleDateString("de-DE")}
+                    </td>
+
+                    <td className="p-4">
+                      <Link
+                        href={`/verwaltung/mitglieder/${member.id}`}
+                        className="rounded-full bg-[#8daa91] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#78987d]"
+                      >
+                        Öffnen
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {members.length === 0 && (
+            <div className="mt-8 rounded-3xl bg-white p-8 text-center shadow-sm">
+              <p className="text-[#666]">
+                Es wurden noch keine Mitglieder angelegt.
+              </p>
+            </div>
+          )}
+        </section>
       </div>
     </main>
   );

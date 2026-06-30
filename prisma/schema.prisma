@@ -67,12 +67,17 @@ model Member {
 
   joinedAt       DateTime @default(now())
 
+  contributionPaidYear Int?
+  contributionPaidAt   DateTime?
+
   password       String?
   lastLogin      DateTime?
   mustChangePassword Boolean  @default(true)
 
   resetToken       String?
   resetTokenExpiry DateTime?
+
+  
 }
 
 model Donation {
@@ -105,11 +110,11 @@ model Document {
 }
 
 model SurveyResponse {
-  id          String   @id @default(cuid())
-  language    String
-  name        String?
-  rating      Int
-  answerOne   String
-  answerTwo   String
-  createdAt   DateTime @default(now())
+  id        String   @id @default(cuid())
+  language  String
+  name      String?
+  rating    Int
+  answerOne String
+  answerTwo String
+  createdAt DateTime @default(now())
 }
