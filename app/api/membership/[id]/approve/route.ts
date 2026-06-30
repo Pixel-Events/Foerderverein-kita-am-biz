@@ -86,44 +86,50 @@ export async function POST(request: Request, { params }: RouteContext) {
         to: member.email,
         subject: "Ihr Zugang zum Mitgliederbereich",
         html: emailLayout({
-  title: "Willkommen im Förderverein",
-  intro:
-    "Ihr Mitgliedsantrag wurde erfolgreich angenommen.",
-  buttonText: "Mitgliederbereich öffnen",
-  buttonUrl: loginUrl,
-  children: `
-    <p>Hallo ${member.firstName},</p>
+          title: "Willkommen im Förderverein",
+          intro: "Ihr Mitgliedsantrag wurde erfolgreich angenommen.",
+          children: `
+            <p>Hallo ${member.firstName},</p>
 
-    <p>
-      Wir freuen uns, Sie als Mitglied im Förderverein Kita am BiZ e. V.
-      begrüßen zu dürfen.
-    </p>
+            <p>
+              Wir freuen uns, Sie als Mitglied im Förderverein Kita am BiZ e. V.
+              begrüßen zu dürfen.
+            </p>
 
-    <p>
-      <strong>Mitgliedsnummer:</strong><br />
-      ${member.memberNumber}
-    </p>
+            <p>
+              <strong>Mitgliedsnummer:</strong><br />
+              ${member.memberNumber}
+            </p>
 
-    <p>
-      <strong>E-Mail:</strong><br />
-      ${member.email}
-    </p>
+            <p>
+              <strong>E-Mail:</strong><br />
+              ${member.email}
+            </p>
 
-    <p>
-      <strong>Initialpasswort:</strong><br />
-      ${initialPassword}
-    </p>
+            <p>
+              <strong>Initialpasswort:</strong><br />
+              ${initialPassword}
+            </p>
 
-    <p>
-      Aus Sicherheitsgründen müssen Sie Ihr Passwort beim ersten Login
-      ändern.
-    </p>
-  `,
-    }),
-  });
-} catch (mailError) {
-  console.error("WELCOME MAIL ERROR:", mailError);
-}
+            <p style="margin: 28px 0;">
+              <a
+                href="${loginUrl}"
+                style="display:inline-block;background:#3f6f55;color:#ffffff;padding:12px 20px;border-radius:999px;text-decoration:none;font-weight:bold;"
+              >
+                Mitgliederbereich öffnen
+              </a>
+            </p>
+
+            <p>
+              Aus Sicherheitsgründen müssen Sie Ihr Passwort beim ersten Login
+              ändern.
+            </p>
+          `,
+        }),
+      });
+    } catch (mailError) {
+      console.error("WELCOME MAIL ERROR:", mailError);
+    }
 
     return NextResponse.json({
       success: true,
