@@ -471,9 +471,8 @@ export default function UmfragePage() {
 
               <button
                 type="button"
-                onClick={() => {
-                  window.location.href = "https://www.foerderverein-kita-am-biz.de/";
-                }}
+                onClick={() => router.push("/")}
+                
                 className="rounded-full border border-[#3f6f5a] px-5 py-3 font-bold text-[#3f6f5a] transition hover:bg-[#f8f5ee]"
                >
                 {t.close}
