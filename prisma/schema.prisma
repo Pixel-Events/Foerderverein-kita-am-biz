@@ -30,6 +30,9 @@ model MembershipApplication {
   accountHolder  String?
 
   message        String?
+
+  newsletterConsent Boolean @default(false)
+  emailInfoConsent  Boolean @default(false)
 }
 
 model Admin {

@@ -37,6 +37,9 @@ export async function POST(request: Request) {
         accountHolder: data.accountHolder || null,
 
         message: data.message || null,
+
+        newsletterConsent: Boolean(data.newsletterConsent),
+        emailInfoConsent: Boolean(data.emailInfoConsent),
       },
     });
 

@@ -42,14 +42,17 @@ export default function Home() {
       street: formData.get("street"),
       zip: formData.get("zip"),
       city: formData.get("city"),
-      childName: formData.get("childName"),
-      childGroup: formData.get("childGroup"),
+
       membershipFee,
       customFee,
       paymentMethod,
+
       accountHolder: formData.get("accountHolder"),
       iban: formData.get("iban"),
       message: formData.get("message"),
+
+      newsletterConsent: formData.get("newsletterConsent") === "on",
+      emailInfoConsent: formData.get("emailInfoConsent") === "on",
     };
 
     const response = await fetch("/api/membership", {
@@ -658,22 +661,24 @@ export default function Home() {
               )}
             </div>
 
-            <div>
-              <h3 className="mb-6 text-2xl font-bold text-[#3f6f55]">
-                Kommunikation
-              </h3>
+            <div className="grid gap-4 md:grid-cols-2">
+              <label className="flex items-center gap-3 rounded-2xl border border-[#ddd4c8] p-4">
+                <input
+                  name="newsletterConsent"
+                  type="checkbox"
+                  className="h-5 w-5"
+                />
+                Newsletter erhalten
+              </label>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <label className="flex items-center gap-3 rounded-2xl border border-[#ddd4c8] p-4">
-                  <input type="checkbox" className="h-5 w-5" />
-                  Newsletter erhalten
-                </label>
-
-                <label className="flex items-center gap-3 rounded-2xl border border-[#ddd4c8] p-4">
-                  <input type="checkbox" className="h-5 w-5" />
-                  Informationen per E-Mail erhalten
-                </label>
-              </div>
+              <label className="flex items-center gap-3 rounded-2xl border border-[#ddd4c8] p-4">
+                <input
+                  name="emailInfoConsent"
+                  type="checkbox"
+                  className="h-5 w-5"
+                />
+                Informationen per E-Mail erhalten
+              </label>
             </div>
 
             <div>

@@ -43,6 +43,7 @@ export default async function AntragDetailPage({ params }: Props) {
             <Detail label="PLZ" value={application.zip} />
             <Detail label="Ort" value={application.city} />
             <Detail label="Beitrag" value={`${application.membershipFee} €`} />
+
             <Detail
               label="Zahlungsart"
               value={
@@ -51,9 +52,11 @@ export default async function AntragDetailPage({ params }: Props) {
                   : "Überweisung"
               }
             />
+
             <Detail label="Kontoinhaber" value={application.accountHolder} />
             <Detail label="IBAN" value={application.iban} />
             <Detail label="Status" value={application.status} />
+
             <Detail
               label="Datum"
               value={new Date(application.createdAt).toLocaleDateString(
@@ -63,23 +66,60 @@ export default async function AntragDetailPage({ params }: Props) {
           </div>
 
           <div className="mt-8">
+            <p className="mb-3 font-semibold text-[#3f6f55]">Kommunikation</p>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="rounded-2xl bg-[#f8f5ee] p-4">
+                <p className="text-sm text-[#666]">Newsletter erhalten</p>
+
+                <p
+                  className={`mt-1 inline-flex rounded-full px-3 py-1 text-sm font-semibold ${
+                    application.newsletterConsent
+                      ? "bg-[#eaf2ea] text-[#3f6f55]"
+                      : "bg-[#f1ece4] text-[#777]"
+                  }`}
+                >
+                  {application.newsletterConsent ? "Ja" : "Nein"}
+                </p>
+              </div>
+
+              <div className="rounded-2xl bg-[#f8f5ee] p-4">
+                <p className="text-sm text-[#666]">
+                  Informationen per E-Mail erhalten
+                </p>
+
+                <p
+                  className={`mt-1 inline-flex rounded-full px-3 py-1 text-sm font-semibold ${
+                    application.emailInfoConsent
+                      ? "bg-[#eaf2ea] text-[#3f6f55]"
+                      : "bg-[#f1ece4] text-[#777]"
+                  }`}
+                >
+                  {application.emailInfoConsent ? "Ja" : "Nein"}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-8">
             <p className="mb-2 font-semibold text-[#3f6f55]">Nachricht</p>
+
             <p className="rounded-2xl bg-[#f8f5ee] p-4">
               {application.message || "Keine Nachricht"}
             </p>
           </div>
 
           <div className="mt-8">
-  <EditApplicationForm application={application} />
-</div>
+            <EditApplicationForm application={application} />
+          </div>
 
           <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-  {application.status !== "Mitglied" && (
-    <ApproveMemberButton id={application.id} />
-  )}
+            {application.status !== "Mitglied" && (
+              <ApproveMemberButton id={application.id} />
+            )}
 
-  <StatusButtons id={application.id} />
-</div>
+            <StatusButtons id={application.id} />
+          </div>
         </div>
       </div>
     </main>
