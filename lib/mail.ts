@@ -20,12 +20,12 @@ export async function sendMail({
     secure: false,
     auth: {
       user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASSWORD,
+      pass: process.env.SMTP_PASS,
     },
   });
 
   await transporter.sendMail({
-    from: process.env.MAIL_FROM,
+    from: process.env.SMTP_FROM,
     to,
     subject,
     html,

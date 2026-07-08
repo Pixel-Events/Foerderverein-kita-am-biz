@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRef, useState } from "react";
+import SignatureCanvas from "react-signature-canvas";
 
 export default function Home() {
   const [membershipFee, setMembershipFee] = useState("24");
@@ -15,70 +16,115 @@ export default function Home() {
   const [memberLoginError, setMemberLoginError] = useState("");
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [formError, setFormError] = useState("");
+  const signatureRef = useRef<SignatureCanvas | null>(null);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   const [showSatzung, setShowSatzung] = useState(false);
   const [showDatenschutz, setShowDatenschutz] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  e.preventDefault();
 
-    setFormError("");
+  setFormError("");
+  setSuccessMessage("");
+  setIsSubmitting(true);
 
+  try {
     const form = e.currentTarget;
+    const formData = new FormData(form);
 
-    if (membershipFee === "custom" && Number(customFee) < 24) {
-      setFormError("Der eigene Jahresbeitrag muss mindestens 24 € betragen.");
+    if (!signatureRef.current || signatureRef.current.isEmpty()) {
+      setFormError("Bitte unterschreibe den Antrag.");
+      setIsSubmitting(false);
       return;
     }
 
-    const formData = new FormData(form);
+    const contributionType = membershipFee === "custom" ? "custom" : "regular";
 
-    const data = {
-      firstName: formData.get("firstName"),
-      lastName: formData.get("lastName"),
-      birthDate: formData.get("birthDate"),
-      email: formData.get("email"),
-      phone: formData.get("phone"),
-      street: formData.get("street"),
-      zip: formData.get("zip"),
-      city: formData.get("city"),
+    const finalMembershipFee =
+      contributionType === "custom" ? Number(customFee) : 24;
 
-      membershipFee,
-      customFee,
+    if (contributionType === "custom" && finalMembershipFee < 25) {
+      setFormError("Der individuelle Förderbeitrag muss mindestens 25 € betragen.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    const signatureImage = signatureRef.current
+      .getTrimmedCanvas()
+      .toDataURL("image/png");
+
+    const payload = {
+      firstName: String(formData.get("firstName") || ""),
+      lastName: String(formData.get("lastName") || ""),
+      birthDate: String(formData.get("birthDate") || ""),
+      email: String(formData.get("email") || ""),
+      phone: String(formData.get("phone") || ""),
+      street: String(formData.get("street") || ""),
+      zip: String(formData.get("zip") || ""),
+      city: String(formData.get("city") || ""),
+
+      contributionType,
+      membershipFee: String(finalMembershipFee),
+
       paymentMethod,
+      accountHolder: String(formData.get("accountHolder") || ""),
+      iban: String(formData.get("iban") || ""),
+      bic: String(formData.get("bic") || ""),
 
-      accountHolder: formData.get("accountHolder"),
-      iban: formData.get("iban"),
-      message: formData.get("message"),
+      newsletterAccepted: Boolean(formData.get("newsletterConsent")),
+      emailInfoConsent: Boolean(formData.get("emailInfoConsent")),
 
-      newsletterConsent: formData.get("newsletterConsent") === "on",
-      emailInfoConsent: formData.get("emailInfoConsent") === "on",
+      message: String(formData.get("message") || ""),
+
+      signatureImage,
     };
 
-    const response = await fetch("/api/membership", {
+    const response = await fetch("/api/membership/signed", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(payload),
     });
 
     const result = await response.json();
 
     if (!response.ok) {
-      setFormError(
-        result.message || "Mitgliedsantrag konnte nicht übermittelt werden."
+      throw new Error(
+        result?.message || "Der Antrag konnte nicht gespeichert werden."
       );
-      return;
     }
 
-    setShowSuccessModal(true);
+    setSuccessMessage(
+      "Vielen Dank! Dein Beitrittsantrag wurde erfolgreich übermittelt. Du erhältst den unterschriebenen Antrag per E-Mail."
+    );
 
+    signatureRef.current.clear();
     form.reset();
+
     setMembershipFee("24");
     setCustomFee("");
     setPaymentMethod("sepa");
+
+    window.scrollTo({
+      top: document.getElementById("beitritt")?.offsetTop || 0,
+      behavior: "smooth",
+    });
+  } catch (error) {
+    console.error(error);
+
+    setFormError(
+      error instanceof Error
+        ? error.message
+        : "Es ist ein Fehler aufgetreten."
+    );
+  } finally {
+    setIsSubmitting(false);
   }
+}
 
   async function handleMemberLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -470,6 +516,12 @@ export default function Home() {
           </p>
         </div>
 
+        {successMessage && (
+          <div className="mt-8 rounded-2xl border border-[#d7ead7] bg-[#eef8ee] p-5 text-[#2f6b3f]">
+            <p className="font-semibold">{successMessage}</p>
+          </div>
+        )}
+
         <form
           onSubmit={handleSubmit}
           className="rounded-[28px] bg-white p-5 shadow-xl sm:p-8 md:rounded-[36px] md:p-12"
@@ -563,7 +615,7 @@ export default function Home() {
                   {
                     value: "custom",
                     title: "Eigener Beitrag",
-                    text: "Mindestens 24 € pro Jahr",
+                    text: "Mindestens 25 € pro Jahr",
                   },
                 ].map((option) => (
                   <button
@@ -588,7 +640,7 @@ export default function Home() {
                 <div className="mt-6">
                   <input
                     type="number"
-                    min="24"
+                    min="25"
                     step="1"
                     value={customFee}
                     onChange={(e) => setCustomFee(e.target.value)}
@@ -598,7 +650,7 @@ export default function Home() {
                   />
 
                   <p className="mt-2 text-sm text-[#666]">
-                    Der Jahresbeitrag muss mindestens 24 € betragen.
+                    Der Jahresbeitrag muss mindestens 25 € betragen.
                   </p>
                 </div>
               )}
@@ -649,6 +701,12 @@ export default function Home() {
                     className="rounded-2xl border border-[#ddd4c8] px-5 py-4"
                     placeholder="IBAN *"
                     required
+                  />
+
+                  <input
+                    name="bic"
+                    className="rounded-2xl border border-[#ddd4c8] px-5 py-4"
+                    placeholder="BIC optional"
                   />
 
                   <label className="flex gap-3 text-sm leading-6 text-[#555] md:col-span-2">
@@ -740,6 +798,36 @@ export default function Home() {
             </div>
           </div>
 
+          <div className="mt-12">
+            <h3 className="mb-6 text-2xl font-bold text-[#3f6f55]">
+              Unterschrift
+            </h3>
+
+            <p className="mb-4 text-sm leading-6 text-[#555]">
+              Bitte unterschreibe den Beitrittsantrag direkt hier mit Maus, Finger oder
+              Stift. Die Unterschrift wird anschließend in die Beitrittserklärung und das
+              SEPA-Lastschriftmandat eingesetzt.
+            </p>
+
+            <div className="rounded-2xl border border-[#ddd4c8] bg-white p-3">
+              <SignatureCanvas
+                ref={signatureRef}
+                penColor="black"
+                canvasProps={{
+                  className: "h-44 w-full rounded-xl bg-white",
+                }}
+              />
+            </div>
+
+            <button
+              type="button"
+              onClick={() => signatureRef.current?.clear()}
+              className="mt-3 text-sm font-semibold text-[#3f6f55] underline underline-offset-2"
+            >
+              Unterschrift löschen
+            </button>
+          </div>
+
           {formError && (
             <div className="mt-8 rounded-2xl bg-red-50 p-4 text-sm font-semibold text-red-700">
               {formError}
@@ -748,9 +836,10 @@ export default function Home() {
 
           <button
             type="submit"
-            className="mt-10 w-full rounded-full bg-[#8daa91] px-10 py-4 font-semibold text-white transition hover:bg-[#78987d] sm:w-auto"
+            disabled={isSubmitting}
+            className="mt-10 w-full rounded-full bg-[#8daa91] px-10 py-4 font-semibold text-white transition hover:bg-[#78987d] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
           >
-            Beitritt absenden
+            {isSubmitting ? "Beitritt wird übermittelt..." : "Beitritt absenden"}
           </button>
         </form>
       </section>

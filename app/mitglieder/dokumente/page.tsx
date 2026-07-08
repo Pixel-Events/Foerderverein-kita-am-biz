@@ -54,6 +54,10 @@ export default async function MitgliederDokumentePage() {
                     Kategorie: {document.category || "Allgemein"} ·{" "}
                     {new Date(document.createdAt).toLocaleDateString("de-DE")}
                   </p>
+
+                  <p className="mt-3 inline-flex rounded-full bg-[#3f6f55] px-4 py-2 text-sm font-semibold text-white">
+                    Dokument öffnen
+                  </p>
                 </a>
               ))}
             </div>

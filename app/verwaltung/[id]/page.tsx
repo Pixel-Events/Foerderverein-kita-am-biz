@@ -22,6 +22,8 @@ export default async function AntragDetailPage({ params }: Props) {
     notFound();
   }
 
+  const hasPdf = Boolean(application.pdfData);
+
   return (
     <main className="min-h-screen bg-[#f8f5ee] px-6 py-12 text-[#2f2f2f]">
       <div className="mx-auto max-w-4xl">
@@ -30,9 +32,34 @@ export default async function AntragDetailPage({ params }: Props) {
         </Link>
 
         <div className="mt-8 rounded-3xl bg-white p-8 shadow-xl">
-          <h1 className="mb-8 text-4xl font-bold text-[#3f6f55]">
-            Beitrittsantrag
-          </h1>
+          <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div>
+              <h1 className="text-4xl font-bold text-[#3f6f55]">
+                Beitrittsantrag
+              </h1>
+
+              <p className="mt-2 text-sm text-[#666]">
+                Antrag von {application.firstName} {application.lastName}
+              </p>
+            </div>
+
+            {hasPdf && (
+              <a
+                href={`/api/verwaltung/applications/${application.id}/pdf`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex justify-center rounded-full bg-[#a47745] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#8f6338]"
+              >
+                Mitgliedsantrag als PDF öffnen
+              </a>
+            )}
+          </div>
+
+          {!hasPdf && (
+            <div className="mb-8 rounded-2xl border border-[#eadfce] bg-[#f8f5ee] p-4 text-sm text-[#666]">
+              Für diesen Antrag wurde noch keine PDF-Datei gespeichert.
+            </div>
+          )}
 
           <div className="grid gap-6 md:grid-cols-2">
             <Detail label="Vorname" value={application.firstName} />

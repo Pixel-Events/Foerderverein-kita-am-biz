@@ -22,17 +22,24 @@ model MembershipApplication {
   zip            String
   city           String
 
+  birthDate DateTime?
+
   membershipFee  Float
 
   paymentMethod  String
 
   iban           String?
   accountHolder  String?
+  bic String?
 
   message        String?
 
   newsletterConsent Boolean @default(false)
   emailInfoConsent  Boolean @default(false)
+
+  pdfFileName String?
+  pdfMimeType String?
+  pdfData     Bytes?
 }
 
 model Admin {
