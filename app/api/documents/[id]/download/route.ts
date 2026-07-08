@@ -13,6 +13,9 @@ export async function GET(request: Request, { params }: RouteContext) {
 
     const document = await prisma.document.findUnique({
       where: { id },
+      select: {
+        fileUrl: true,
+      },
     });
 
     if (!document) {
@@ -22,17 +25,9 @@ export async function GET(request: Request, { params }: RouteContext) {
       );
     }
 
-    return new NextResponse(Buffer.from(document.data), {
-      status: 200,
-      headers: {
-        "Content-Type": document.mimeType,
-        "Content-Disposition": `inline; filename="${encodeURIComponent(
-          document.fileName
-        )}"`,
-      },
-    });
+    return NextResponse.redirect(document.fileUrl);
   } catch (error) {
-    console.error("DOCUMENT DOWNLOAD ERROR:", error);
+    console.error("DOCUMENT DOWNLOAD REDIRECT ERROR:", error);
 
     return NextResponse.json(
       { message: "Dokument konnte nicht geöffnet werden." },
