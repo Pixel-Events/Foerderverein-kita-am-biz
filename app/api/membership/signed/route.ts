@@ -155,7 +155,9 @@ export async function POST(request: Request) {
 
     const pdfBytes = await pdfDoc.save();
 
-    const fileName = `mitgliedsantrag-${data.lastName || "test"}-${Date.now()}.pdf`;
+    const fileName = `mitgliedsantrag-${
+      data.lastName || "test"
+    }-${Date.now()}.pdf`;
 
     // -------------------------
     // Antrag + PDF speichern
@@ -224,7 +226,7 @@ export async function POST(request: Request) {
           socketTimeout: 15000,
         });
 
-        await transporter.sendMail({
+        const mailPromise = transporter.sendMail({
           from: smtpFrom,
           to: data.email,
           subject: "Ihr Mitgliedsantrag beim Förderverein Kita am BiZ e. V.",
@@ -236,9 +238,10 @@ Im Anhang finden Sie Ihren vorausgefüllten Mitgliedsantrag als PDF.
 
 Bitte prüfen Sie die Angaben, unterschreiben Sie den Antrag an den vorgesehenen Stellen und senden Sie ihn anschließend an uns zurück.
 
-Sollten Sie keinen Zugang zu einem Drucker haben, antworten Sie einfach auf diese Mail und wir werden gemeinsam eine Lösung finden.`,
+Sollten Sie keinen Zugang zu einem Drucker haben, antworten Sie einfach auf diese Mail und wir werden gemeinsam eine Lösung finden.
 
-
+Viele Grüße
+Förderverein Kita am BiZ e. V.`,
           attachments: [
             {
               filename: fileName,
@@ -247,6 +250,19 @@ Sollten Sie keinen Zugang zu einem Drucker haben, antworten Sie einfach auf dies
             },
           ],
         });
+
+        await Promise.race([
+          mailPromise,
+          new Promise((_, reject) =>
+            setTimeout(
+              () =>
+                reject(
+                  new Error("Zeitüberschreitung beim E-Mail-Versand.")
+                ),
+              8000
+            )
+          ),
+        ]);
 
         mailSent = true;
       } catch (mailError) {
