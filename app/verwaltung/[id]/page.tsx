@@ -38,6 +38,21 @@ export default async function AntragDetailPage({ params }: Props) {
             <p className="mt-2 text-sm text-[#666]">
               Antrag von {application.firstName} {application.lastName}
             </p>
+
+            {application.pdfData ? (
+              <a
+                href={`/api/verwaltung/applications/${application.id}/pdf`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-5 inline-flex rounded-full bg-[#a47745] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#8f6338]"
+              >
+                PDF-Mitgliedsantrag öffnen
+              </a>
+            ) : (
+              <p className="mt-5 inline-flex rounded-full bg-red-50 px-5 py-3 text-sm font-semibold text-red-700">
+                Keine PDF gespeichert
+              </p>
+            )}
           </div>
 
           <div className="grid gap-6 md:grid-cols-2">
@@ -61,7 +76,13 @@ export default async function AntragDetailPage({ params }: Props) {
 
             <Detail label="Kontoinhaber" value={application.accountHolder} />
             <Detail label="IBAN" value={application.iban} />
+            <Detail label="BIC" value={application.bic} />
             <Detail label="Status" value={application.status} />
+
+            <Detail
+              label="PDF gespeichert"
+              value={application.pdfData ? "Ja" : "Nein"}
+            />
 
             <Detail
               label="Antrag erstellt"
