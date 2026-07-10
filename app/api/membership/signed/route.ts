@@ -150,8 +150,7 @@ export async function POST(request: Request) {
     drawText(data.bic, 90, 181, 8);
     drawText(placeDate, 102, 146);
 
-    // Wichtig:
-    // Keine Unterschrift mehr einfügen.
+    // Keine Unterschrift einfügen.
     // Die Unterschriftsfelder im PDF bleiben leer.
 
     const pdfBytes = await pdfDoc.save();
@@ -239,6 +238,7 @@ Bitte prüfen Sie die Angaben, unterschreiben Sie den Antrag an den vorgesehenen
 
 Sollten Sie keinen Zugang zu einem Drucker haben, antworten Sie einfach auf diese Mail und wir werden gemeinsam eine Lösung finden.`,
 
+
           attachments: [
             {
               filename: fileName,
@@ -258,6 +258,18 @@ Sollten Sie keinen Zugang zu einem Drucker haben, antworten Sie einfach auf dies
             : "E-Mail konnte nicht versendet werden.";
       }
     }
+
+    // -------------------------
+    // Mailstatus speichern
+    // -------------------------
+
+    await prisma.membershipApplication.update({
+      where: { id: application.id },
+      data: {
+        mailSentAt: mailSent ? new Date() : null,
+        mailError: mailSent ? null : mailErrorMessage,
+      },
+    });
 
     return NextResponse.json(
       {

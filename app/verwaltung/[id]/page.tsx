@@ -22,8 +22,6 @@ export default async function AntragDetailPage({ params }: Props) {
     notFound();
   }
 
-  const hasPdf = Boolean(application.pdfData);
-
   return (
     <main className="min-h-screen bg-[#f8f5ee] px-6 py-12 text-[#2f2f2f]">
       <div className="mx-auto max-w-4xl">
@@ -32,34 +30,15 @@ export default async function AntragDetailPage({ params }: Props) {
         </Link>
 
         <div className="mt-8 rounded-3xl bg-white p-8 shadow-xl">
-          <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div>
-              <h1 className="text-4xl font-bold text-[#3f6f55]">
-                Beitrittsantrag
-              </h1>
+          <div className="mb-8">
+            <h1 className="text-4xl font-bold text-[#3f6f55]">
+              Beitrittsantrag
+            </h1>
 
-              <p className="mt-2 text-sm text-[#666]">
-                Antrag von {application.firstName} {application.lastName}
-              </p>
-            </div>
-
-            {hasPdf && (
-              <a
-                href={`/api/verwaltung/applications/${application.id}/pdf`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex justify-center rounded-full bg-[#a47745] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#8f6338]"
-              >
-                Mitgliedsantrag als PDF öffnen
-              </a>
-            )}
+            <p className="mt-2 text-sm text-[#666]">
+              Antrag von {application.firstName} {application.lastName}
+            </p>
           </div>
-
-          {!hasPdf && (
-            <div className="mb-8 rounded-2xl border border-[#eadfce] bg-[#f8f5ee] p-4 text-sm text-[#666]">
-              Für diesen Antrag wurde noch keine PDF-Datei gespeichert.
-            </div>
-          )}
 
           <div className="grid gap-6 md:grid-cols-2">
             <Detail label="Vorname" value={application.firstName} />
@@ -85,11 +64,46 @@ export default async function AntragDetailPage({ params }: Props) {
             <Detail label="Status" value={application.status} />
 
             <Detail
-              label="Datum"
+              label="Antrag erstellt"
               value={new Date(application.createdAt).toLocaleDateString(
                 "de-DE"
               )}
             />
+
+            <Detail
+              label="E-Mail versendet"
+              value={
+                application.mailSentAt
+                  ? new Date(application.mailSentAt).toLocaleString("de-DE")
+                  : "Nein"
+              }
+            />
+          </div>
+
+          <div className="mt-8 rounded-2xl bg-[#f8f5ee] p-4">
+            <p className="mb-2 font-semibold text-[#3f6f55]">
+              E-Mail-Versand
+            </p>
+
+            {application.mailSentAt ? (
+              <p className="inline-flex rounded-full bg-[#eaf2ea] px-3 py-1 text-sm font-semibold text-[#3f6f55]">
+                Versendet am{" "}
+                {new Date(application.mailSentAt).toLocaleString("de-DE")}
+              </p>
+            ) : (
+              <p className="inline-flex rounded-full bg-red-50 px-3 py-1 text-sm font-semibold text-red-700">
+                Nicht versendet
+              </p>
+            )}
+
+            {application.mailError && (
+              <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                <p className="font-semibold">
+                  E-Mail konnte nicht versendet werden
+                </p>
+                <p className="mt-2 break-words">{application.mailError}</p>
+              </div>
+            )}
           </div>
 
           <div className="mt-8">

@@ -40,6 +40,9 @@ model MembershipApplication {
   pdfFileName String?
   pdfMimeType String?
   pdfData     Bytes?
+
+  mailSentAt DateTime?
+  mailError  String?
 }
 
 model Admin {
