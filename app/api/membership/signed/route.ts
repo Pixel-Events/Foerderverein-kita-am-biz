@@ -259,12 +259,10 @@ export async function POST(request: Request) {
 
 vielen Dank für Ihren Mitgliedsantrag beim Förderverein Kita am BiZ e. V.
 
-Dieser wird nun geprüft und Sie bekommen nach der Prüfung Ihren persönlichen Zugang zum Mitgliederbereich.
+Im Anhang finden Sie Ihren ausgefüllten Mitgliedsantrag als PDF. Bitte drucken Sie diesen aus und geben Sie ihn unterschrieben bei der Leitung der Kita ab.
 
-Im Anhang finden Sie Ihren ausgefüllten und elektronisch unterschriebenen Mitgliedsantrag als PDF.
+Anschließend wird Ihr Antrag gerüft und Sie bekommen nach der Prüfung Ihren persönlichen Zugang zum Mitgliederbereich.`,
 
-Viele Grüße
-Förderverein Kita am BiZ e. V.`,
       attachments: [
         {
           filename: fileName,

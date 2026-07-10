@@ -2,8 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState } from "react";
-import SignatureCanvas from "react-signature-canvas";
+import { useState } from "react";
 
 export default function Home() {
   const [membershipFee, setMembershipFee] = useState("24");
@@ -16,7 +15,7 @@ export default function Home() {
   const [memberLoginError, setMemberLoginError] = useState("");
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [formError, setFormError] = useState("");
-  const signatureRef = useRef<SignatureCanvas | null>(null);
+ 
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
@@ -35,11 +34,7 @@ export default function Home() {
     const form = e.currentTarget;
     const formData = new FormData(form);
 
-    if (!signatureRef.current || signatureRef.current.isEmpty()) {
-      setFormError("Bitte unterschreibe den Antrag.");
-      setIsSubmitting(false);
-      return;
-    }
+  
 
     const contributionType = membershipFee === "custom" ? "custom" : "regular";
 
@@ -51,10 +46,6 @@ export default function Home() {
       setIsSubmitting(false);
       return;
     }
-
-    const signatureImage = signatureRef.current
-      .getTrimmedCanvas()
-      .toDataURL("image/png");
 
     const payload = {
       firstName: String(formData.get("firstName") || ""),
@@ -79,7 +70,6 @@ export default function Home() {
 
       message: String(formData.get("message") || ""),
 
-      signatureImage,
     };
 
     const response = await fetch("/api/membership/signed", {
@@ -99,10 +89,9 @@ export default function Home() {
     }
 
     setSuccessMessage(
-      "Vielen Dank! Dein Beitrittsantrag wurde erfolgreich übermittelt. Du erhältst den unterschriebenen Antrag per E-Mail."
+      "Vielen Dank! Dein Beitrittsantrag wurde erfolgreich übermittelt. Du erhältst den ausgefüllten Antrag zur Unterschrift per E-Mail."
     );
 
-    signatureRef.current.clear();
     form.reset();
 
     setMembershipFee("24");
@@ -796,36 +785,6 @@ export default function Home() {
                 </label>
               </div>
             </div>
-          </div>
-
-          <div className="mt-12">
-            <h3 className="mb-6 text-2xl font-bold text-[#3f6f55]">
-              Unterschrift
-            </h3>
-
-            <p className="mb-4 text-sm leading-6 text-[#555]">
-              Bitte unterschreibe den Beitrittsantrag direkt hier mit Maus, Finger oder
-              Stift. Die Unterschrift wird anschließend in die Beitrittserklärung und das
-              SEPA-Lastschriftmandat eingesetzt.
-            </p>
-
-            <div className="rounded-2xl border border-[#ddd4c8] bg-white p-3">
-              <SignatureCanvas
-                ref={signatureRef}
-                penColor="black"
-                canvasProps={{
-                  className: "h-44 w-full rounded-xl bg-white",
-                }}
-              />
-            </div>
-
-            <button
-              type="button"
-              onClick={() => signatureRef.current?.clear()}
-              className="mt-3 text-sm font-semibold text-[#3f6f55] underline underline-offset-2"
-            >
-              Unterschrift löschen
-            </button>
           </div>
 
           {formError && (
