@@ -214,21 +214,17 @@ export async function POST(request: Request) {
     } else {
       try {
         const transporter = nodemailer.createTransport({
-          host: smtpHost,
-          port: 587,
-          secure: false,
-          requireTLS: true,
-          auth: {
-            user: smtpUser,
-            pass: smtpPass,
-          },
-          tls: {
-            minVersion: "TLSv1.2",
-          },
-          connectionTimeout: 45000,
-          greetingTimeout: 45000,
-          socketTimeout: 45000,
-});
+        host: smtpHost,
+        port: smtpPort,
+        secure: smtpPort === 465,
+        auth: {
+          user: smtpUser,
+          pass: smtpPass,
+        },
+        connectionTimeout: 20000,
+        greetingTimeout: 20000,
+        socketTimeout: 20000,
+      });
 
         const mailPromise = transporter.sendMail({
           from: smtpFrom,
