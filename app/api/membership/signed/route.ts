@@ -150,33 +150,9 @@ export async function POST(request: Request) {
     drawText(data.bic, 90, 181, 8);
     drawText(placeDate, 102, 146);
 
-    // -------------------------
-    // Unterschriften
-    // -------------------------
-
-    if (data.signatureImage) {
-      const signatureBase64 = data.signatureImage.replace(
-        /^data:image\/png;base64,/,
-        ""
-      );
-
-      const signatureBytes = Buffer.from(signatureBase64, "base64");
-      const signatureImage = await pdfDoc.embedPng(signatureBytes);
-
-      page.drawImage(signatureImage, {
-        x: 355,
-        y: 384,
-        width: 145,
-        height: 32,
-      });
-
-      page.drawImage(signatureImage, {
-        x: 355,
-        y: 134,
-        width: 145,
-        height: 32,
-      });
-    }
+    // Wichtig:
+    // Keine Unterschrift mehr einfügen.
+    // Die Unterschriftsfelder im PDF bleiben leer.
 
     const pdfBytes = await pdfDoc.save();
 
@@ -205,10 +181,9 @@ export async function POST(request: Request) {
         accountHolder: data.accountHolder || null,
 
         newsletterConsent: Boolean(data.newsletterAccepted),
-        emailInfoConsent: true,
+        emailInfoConsent: Boolean(data.emailInfoConsent),
 
-        message:
-          "Antrag wurde über die Testseite mit digitaler Unterschrift erstellt.",
+        message: data.message || null,
         status: "Neu",
 
         pdfFileName: fileName,
@@ -225,70 +200,85 @@ export async function POST(request: Request) {
     const smtpPort = Number(process.env.SMTP_PORT || 587);
     const smtpUser = process.env.SMTP_USER;
     const smtpPass = process.env.SMTP_PASS;
-    const smtpFrom = process.env.SMTP_FROM;
+    const smtpFrom =
+      process.env.SMTP_FROM ||
+      `Förderverein Kita am BiZ e. V. <${process.env.SMTP_USER}>`;
 
-    console.log("SMTP DEBUG:", {
-      SMTP_HOST: process.env.SMTP_HOST,
-      SMTP_PORT: process.env.SMTP_PORT,
-      SMTP_USER: process.env.SMTP_USER,
-      SMTP_PASS_EXISTS: Boolean(process.env.SMTP_PASS),
-      SMTP_FROM: process.env.SMTP_FROM,
-    });
+    let mailSent = false;
+    let mailErrorMessage: string | null = null;
 
-    if (!smtpHost || !smtpUser || !smtpPass || !smtpFrom) {
-      throw new Error(
-        "SMTP-Konfiguration fehlt. Bitte SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS und SMTP_FROM in .env setzen."
-      );
-    }
+    if (!smtpHost || !smtpUser || !smtpPass) {
+      mailErrorMessage =
+        "SMTP-Konfiguration fehlt. Antrag wurde gespeichert, aber die E-Mail konnte nicht versendet werden.";
+    } else {
+      try {
+        const transporter = nodemailer.createTransport({
+          host: smtpHost,
+          port: smtpPort,
+          secure: smtpPort === 465,
+          auth: {
+            user: smtpUser,
+            pass: smtpPass,
+          },
+          connectionTimeout: 10000,
+          greetingTimeout: 10000,
+          socketTimeout: 15000,
+        });
 
-    const transporter = nodemailer.createTransport({
-      host: smtpHost,
-      port: smtpPort,
-      secure: smtpPort === 465,
-      auth: {
-        user: smtpUser,
-        pass: smtpPass,
-      },
-    });
-
-    await transporter.sendMail({
-      from: smtpFrom,
-      to: data.email,
-      subject: "Ihr Mitgliedsantrag beim Förderverein Kita am BiZ e. V.",
-      text: `Liebe/r ${data.firstName} ${data.lastName},
+        await transporter.sendMail({
+          from: smtpFrom,
+          to: data.email,
+          subject: "Ihr Mitgliedsantrag beim Förderverein Kita am BiZ e. V.",
+          text: `Liebe/r ${data.firstName} ${data.lastName},
 
 vielen Dank für Ihren Mitgliedsantrag beim Förderverein Kita am BiZ e. V.
 
-Im Anhang finden Sie Ihren ausgefüllten Mitgliedsantrag als PDF. Bitte drucken Sie diesen aus und geben Sie ihn unterschrieben bei der Leitung der Kita ab.
+Im Anhang finden Sie Ihren vorausgefüllten Mitgliedsantrag als PDF.
 
-Anschließend wird Ihr Antrag gerüft und Sie bekommen nach der Prüfung Ihren persönlichen Zugang zum Mitgliederbereich.`,
+Bitte prüfen Sie die Angaben, unterschreiben Sie den Antrag an den vorgesehenen Stellen und senden Sie ihn anschließend an uns zurück.
 
-      attachments: [
-        {
-          filename: fileName,
-          content: Buffer.from(pdfBytes),
-          contentType: "application/pdf",
-        },
-      ],
-    });
+Sollten Sie keinen Zugang zu einem Drucker haben, antworten Sie einfach auf diese Mail und wir werden gemeinsam eine Lösung finden.`,
+
+          attachments: [
+            {
+              filename: fileName,
+              content: Buffer.from(pdfBytes),
+              contentType: "application/pdf",
+            },
+          ],
+        });
+
+        mailSent = true;
+      } catch (mailError) {
+        console.error("MAIL SEND ERROR:", mailError);
+
+        mailErrorMessage =
+          mailError instanceof Error
+            ? mailError.message
+            : "E-Mail konnte nicht versendet werden.";
+      }
+    }
 
     return NextResponse.json(
       {
-        message:
-          "Antrag wurde erstellt, PDF gespeichert und per E-Mail versendet.",
+        message: mailSent
+          ? "Antrag wurde erstellt, PDF gespeichert und per E-Mail versendet."
+          : "Antrag wurde erstellt und PDF gespeichert. Die E-Mail konnte nicht automatisch versendet werden.",
         applicationId: application.id,
+        mailSent,
+        mailError: mailErrorMessage,
       },
       { status: 201 }
     );
   } catch (error) {
-    console.error("PDF TEMPLATE SAVE/MAIL ERROR:", error);
+    console.error("MEMBERSHIP SIGNED ERROR:", error);
 
     return NextResponse.json(
       {
         message:
           error instanceof Error
             ? error.message
-            : "PDF konnte nicht erstellt, gespeichert oder versendet werden.",
+            : "Antrag konnte nicht erstellt werden.",
       },
       { status: 500 }
     );
