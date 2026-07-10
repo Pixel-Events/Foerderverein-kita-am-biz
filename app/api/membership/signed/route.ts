@@ -217,13 +217,14 @@ export async function POST(request: Request) {
           host: smtpHost,
           port: smtpPort,
           secure: smtpPort === 465,
+          requireTLS: smtpPort === 587,
           auth: {
             user: smtpUser,
             pass: smtpPass,
           },
-          connectionTimeout: 10000,
-          greetingTimeout: 10000,
-          socketTimeout: 15000,
+          connectionTimeout: 20000,
+          greetingTimeout: 20000,
+          socketTimeout: 20000,
         });
 
         const mailPromise = transporter.sendMail({
@@ -259,7 +260,7 @@ Förderverein Kita am BiZ e. V.`,
                 reject(
                   new Error("Zeitüberschreitung beim E-Mail-Versand.")
                 ),
-              8000
+              20000
             )
           ),
         ]);
