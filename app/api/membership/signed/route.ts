@@ -215,17 +215,20 @@ export async function POST(request: Request) {
       try {
         const transporter = nodemailer.createTransport({
           host: smtpHost,
-          port: smtpPort,
-          secure: smtpPort === 465,
-          requireTLS: smtpPort === 587,
+          port: 587,
+          secure: false,
+          requireTLS: true,
           auth: {
             user: smtpUser,
             pass: smtpPass,
           },
-          connectionTimeout: 20000,
-          greetingTimeout: 20000,
-          socketTimeout: 20000,
-        });
+          tls: {
+            minVersion: "TLSv1.2",
+          },
+          connectionTimeout: 45000,
+          greetingTimeout: 45000,
+          socketTimeout: 45000,
+});
 
         const mailPromise = transporter.sendMail({
           from: smtpFrom,
